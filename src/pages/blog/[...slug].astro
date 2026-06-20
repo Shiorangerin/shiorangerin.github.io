@@ -1,7 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Comments from "../../components/Comments.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
@@ -51,7 +50,6 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
     </div>
   </article>
 
-  <Comments slug={post.id} />
 </BaseLayout>
 
 <script>

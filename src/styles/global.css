@@ -417,7 +417,6 @@ a:hover { color: var(--accent-hover); }
 
 .blog-post-content hr { border: none; border-top: 0.5px solid var(--separator); margin: 2rem 0; }
 
-.comments { margin-top: 1.25rem; }
 
 /* ---- About ---- */
 .about-section { margin-bottom: 1.75rem; }
