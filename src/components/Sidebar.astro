@@ -1,0 +1,80 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const navItems = [
+  { href: "/", label: "首页", icon: "house" },
+  { href: "/blog", label: "博客", icon: "pen" },
+  { href: "/about", label: "关于", icon: "person" },
+];
+
+function isActive(href: string, path: string) {
+  if (href === "/") return path === "/" || path === "";
+  return path.startsWith(href);
+}
+
+const iconMap: Record<string, string> = {
+  house: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/></svg>`,
+  pen: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+  person: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>`,
+};
+---
+
+<aside class="sidebar">
+  <a href="/" class="sidebar-profile" style="text-decoration: none; color: inherit;">
+    <img src="/avatar.jpg" alt="Avatar" class="sidebar-avatar" />
+    <div>
+      <div class="sidebar-name">Shiorangerin</div>
+      <div class="sidebar-handle">@shiorangerin</div>
+    </div>
+  </a>
+
+  <div class="sidebar-section-label">导航</div>
+
+  <nav class="sidebar-nav">
+    {navItems.map((item) => (
+      <a
+        href={item.href}
+        class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
+      >
+        <Fragment set:html={iconMap[item.icon] ?? ""} />
+        <span>{item.label}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="theme-label">外观</span>
+    <button
+      id="theme-toggle"
+      class="theme-toggle"
+      aria-label="切换深色模式"
+      title="切换深色模式"
+    >
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  toggle?.addEventListener("click", () => {
+    const isDark = document.documentElement.hasAttribute("data-theme");
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    }
+  });
+</script>

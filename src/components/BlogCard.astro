@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, description, date, tags } = post.data;
+const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 400));
+---
+
+<a href={`/blog/${post.id}`} class="blog-card animate-in">
+  <div class="accent-line"></div>
+  <time class="blog-card-date" datetime={date.toISOString()}>
+    {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+  </time>
+  <h3 class="blog-card-title">{title}</h3>
+  <p class="blog-card-desc">{description}</p>
+  <div class="blog-card-meta">
+    <span>阅读约 {readingTime} 分钟</span>
+    {tags.length > 0 && (
+      <span>{tags.slice(0, 3).map((t) => `#${t}`).join(" ")}</span>
+    )}
+  </div>
+</a>
