@@ -13,16 +13,17 @@ const siteTitle = "Shiorangerin";
 const fullTitle = title === "首页" ? siteTitle : `${title} — ${siteTitle}`;
 const desc = description ?? "Shiorangerin 的个人站点。";
 const currentPath = Astro.url.pathname;
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
 function isActive(href: string, path: string) {
-  if (href === "/") return path === "/" || path === "";
-  return path.startsWith(href);
+  if (href === base || href === base.slice(0, -1)) return path === "/" || path === "";
+  return path.startsWith(href.replace(base, "/"));
 }
 
 const mobileNav = [
-  { href: "/", label: "首页", icon: "house" },
-  { href: "/blog", label: "博客", icon: "pen" },
-  { href: "/about", label: "关于", icon: "person" },
+  { href: base, label: "首页", icon: "house" },
+  { href: base + "blog", label: "博客", icon: "pen" },
+  { href: base + "about", label: "关于", icon: "person" },
 ];
 ---
 
@@ -40,8 +41,8 @@ const mobileNav = [
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href="/rss.xml" />
+    <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
+    <link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href={base + "rss.xml"} />
   </head>
   <body>
     <script>

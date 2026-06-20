@@ -42,7 +42,7 @@
 
   --sidebar-w: 200px;
   --content-w: 760px;
-  --wallpaper: url("/wallpaper.png");
+  --wallpaper: url("../wallpaper.png");
 
   color-scheme: light;
 }
