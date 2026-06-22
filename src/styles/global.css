@@ -42,7 +42,6 @@
 
   --sidebar-w: 200px;
   --content-w: 760px;
-  --wallpaper: url("../wallpaper.png");
 
   color-scheme: light;
 }
@@ -82,7 +81,6 @@ body {
   line-height: 1.55;
   color: var(--text-primary);
   background-color: #f2f2f7;
-  background-image: var(--wallpaper);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
