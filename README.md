@@ -2,6 +2,8 @@
 
 **Good morning, and in case I don't see you, Good afternoon, Good evening, and Good night!**
 
+![Neofetch Stats](https://neofetch-profile.vercel.app/api?username=shiorangerin)
+
 <!--
 **Shiorangerin/shiorangerin** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
