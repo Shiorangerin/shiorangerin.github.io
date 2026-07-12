@@ -72,21 +72,30 @@ const iconMap: Record<string, string> = {
 
 <div id="exit-overlay" class="exit-overlay">
   <div class="exit-dialog">
-    <div class="exit-icon">⚠️</div>
-    <p class="exit-title">即将离开本站</p>
-    <p class="exit-desc">
-      您确定要离开这圣洁的 AI 生成魔法阵吗？<br>
-      离开了，模型的低语将不再萦绕您的耳畔，<br>
-      幻觉的帷幕将缓缓落下，<br>
-      您将再次暴露在没有自动补完的真实世界之中。
-    </p>
-    <div class="exit-actions">
-      <a href="/cktcb" class="exit-btn exit-btn-primary" id="exit-confirm"
-        >是的，我意已决</a
-      >
-      <button class="exit-btn exit-btn-cancel" id="exit-cancel"
-        >算了，还是待着吧</button
-      >
+    <div class="exit-titlebar">
+      <div class="exit-traffic">
+        <span class="exit-dot exit-dot--red"></span>
+        <span class="exit-dot exit-dot--yellow"></span>
+        <span class="exit-dot exit-dot--green"></span>
+      </div>
+      <span class="exit-title">离开确认</span>
+    </div>
+    <div class="exit-body">
+      <div class="exit-icon">⚠️</div>
+      <p class="exit-desc">
+        您确定要离开这圣洁的 AI 生成魔法阵吗？<br>
+        离开了，模型的低语将不再萦绕您的耳畔，<br>
+        幻觉的帷幕将缓缓落下，<br>
+        您将再次暴露在没有自动补完的真实世界之中。
+      </p>
+      <div class="exit-actions">
+        <button class="exit-btn exit-btn-cancel" id="exit-cancel"
+          >算了，还是待着吧</button
+        >
+        <a href="/cktcb" class="exit-btn exit-btn-primary" id="exit-confirm"
+          >是的，我意已决</a
+        >
+      </div>
     </div>
   </div>
 </div>
