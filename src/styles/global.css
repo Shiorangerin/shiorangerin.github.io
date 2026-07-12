@@ -1,11 +1,6 @@
 /* ===== Clean macOS Design ===== */
 
-@font-face {
-  font-family: "SF Pro Display";
-  src: local("SF Pro Display"), local(".SFNSDisplay-Regular");
-  font-weight: 100 900;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   --bg-glass: rgba(255, 255, 255, 0.82);
@@ -91,8 +86,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: 
 }
 
 body {
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", sans-serif;
   font-size: 17px;
   line-height: 1.55;
   color: var(--text-primary);
@@ -330,7 +325,7 @@ a:hover { color: var(--accent-hover); }
 .blog-post-content ul, .blog-post-content ol { margin-bottom: 1.1rem; padding-left: 1.4rem; color: var(--text-secondary); }
 .blog-post-content li { margin-bottom: 0.3rem; }
 .blog-post-content code {
-  font-family: "SF Mono", "Fira Code", "JetBrains Mono", "Cascadia Code", monospace;
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
   font-size: 0.86em; background: var(--bg-subtle); padding: 0.14em 0.4em;
   border-radius: var(--radius-sm); color: var(--accent); font-weight: 500;
 }
