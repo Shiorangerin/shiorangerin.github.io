@@ -35,11 +35,8 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
     </div>
   </section>
 
-  <section>
-    <h2>
-      最近文章
-    </h2>
-    {
+   <section>
+     {
       recentPosts.length === 0 ? (
         <div class="glass-card empty-state">
           <p>暂无文章，稍后再来看看。</p>
