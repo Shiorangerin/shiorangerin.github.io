@@ -1,0 +1,436 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>TODO-Handler-Skill: 给 Codex CLI 装上长期待办清单 — Shiorangerin</title><link rel="canonical" href="https://shiorangerin.github.io/blog/todo-handler-skill/"><meta name="description" content="一套文件驱动的 TODO 管理规范，让 AI 助手跨越会话边界，在本地磁盘维护你的个人待办清单。支持查询、添加、标记完成、编辑删除与同步导出。"><meta property="og:title" content="TODO-Handler-Skill: 给 Codex CLI 装上长期待办清单 — Shiorangerin"><meta property="og:description" content="一套文件驱动的 TODO 管理规范，让 AI 助手跨越会话边界，在本地磁盘维护你的个人待办清单。支持查询、添加、标记完成、编辑删除与同步导出。"><meta property="og:type" content="website"><meta property="og:url" content="https://shiorangerin.github.io/blog/todo-handler-skill/"><meta property="og:locale" content="zh_CN"><meta property="og:site_name" content="Shiorangerin"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@shiorangerin"><meta name="twitter:creator" content="@shiorangerin"><meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href="/rss.xml"><link rel="stylesheet" href="/_astro/about.sQQLOKaF.css"></head> <body style="background-image: url(/wallpaper.png)"> <a href="#main-content" class="skip-link">跳到主要内容</a> <script type="module">document.getElementById("mobile-theme-toggle")?.addEventListener("click",()=>{document.documentElement.hasAttribute("data-theme")?(document.documentElement.removeAttribute("data-theme"),localStorage.setItem("theme","light")):(document.documentElement.setAttribute("data-theme","dark"),localStorage.setItem("theme","dark"))});</script> <div class="page-wrapper"> <aside class="sidebar"> <a href="/" class="sidebar-profile" style="text-decoration: none; color: inherit;"> <img src="/avatar.jpg" alt="Avatar" class="sidebar-avatar"> <div> <div class="sidebar-name">Shiorangerin</div> <div class="sidebar-handle">@shiorangerin</div> </div> </a> <div class="sidebar-section-label">导航</div> <nav class="sidebar-nav"> <a href="/" class="sidebar-link "> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/></svg> <span>首页</span> </a><a href="/blog" class="sidebar-link active" aria-current="page"> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> <span>博客</span> </a><a href="/about" class="sidebar-link "> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <span>关于</span> </a> </nav> <div class="sidebar-footer"> <span class="theme-label">外观</span> <button id="theme-toggle" class="theme-toggle" aria-label="切换深色模式" title="切换深色模式"> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path> </svg> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> </div> </aside> <script type="module">const e=document.getElementById("theme-toggle");e?.addEventListener("click",()=>{document.documentElement.hasAttribute("data-theme")?(document.documentElement.removeAttribute("data-theme"),localStorage.setItem("theme","light")):(document.documentElement.setAttribute("data-theme","dark"),localStorage.setItem("theme","dark"))});</script> <main class="main-content" id="main-content"> <div class="content-container">  <article class="blog-post animate-in"> <header class="blog-post-header"> <h1 class="blog-post-title">TODO-Handler-Skill: 给 Codex CLI 装上长期待办清单</h1> <div class="blog-post-meta"> <time datetime="2026-06-22T00:00:00.000Z"> 2026年6月22日 </time>  <span>15 min read</span> </div> <div class="tags" style="margin-top: 1rem;"> <span class="tag">#Codex</span><span class="tag">#Skill</span><span class="tag">#TODO</span><span class="tag">#效率</span><span class="tag">#自动化</span> </div> </header> <div class="blog-post-content"> <blockquote>
+<p>本博文由 Codex 生成。</p>
+</blockquote>
+<h2 id="背景">背景</h2>
+<p>Codex CLI 内置了对话级 <code>todo_list</code> 工具，但每次会话结束就消失。没有一个”打开同一个文件、按日期分类、可长期累积”的待办清单。</p>
+<p>TODO-Handler-Skill 就是解决这个问题的。它是一份操作规范，告诉 AI 助手如何在本地 <code>~/Documents/TODO.md</code> 文件上执行全部 TODO 操作——查询、添加、勾选、编辑、删除、跨目录同步。</p>
+<h2 id="设计原则">设计原则</h2>
+<ul>
+<li><strong>文件驱动</strong> 所有 TODO 存在本地 Markdown 文件，不依赖任何数据库或云服务。</li>
+<li><strong>永不覆盖</strong> 新增条目始终追加，不破坏已有内容。</li>
+<li><strong>显式勾选</strong> <code>- [ ]</code> 未完成、<code>- [x]</code> 已完成、<code>- [?]</code> 状态未知，一目了然。</li>
+<li><strong>去重合并</strong> 同步功能会对比任务正文，避免重复插入。</li>
+<li><strong>macOS 原生</strong> 所有命令适配 BSD sed / BSD date / Zsh 环境。</li>
+</ul>
+<h2 id="技能规范全文">技能规范全文</h2>
+<p>以下为完整的 <code>SKILL.md</code> 源文件：</p>
+<pre class="astro-code github-dark-dimmed" style="background-color:#22272e;color:#adbac7; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"><span style="color:#ADBAC7">name: todo-handler</span></span>
+<span class="line"><span style="color:#ADBAC7">description: 处理用户 TODO/Todo 相关查询与操作的强制流程。触发关键词："今天有什么工作"、"TODO"、"待办"、"我要做什么"、"今天有什么事"、以及"加一条 TODO""完成 XX""导出到桌面""同步到桌面"等写入类请求；或任何对桌面 TODO.md 的查询请求。</span></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold"># TODO 处理规范</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 两种 TODO 系统的区分</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">本 skill 管理的是 </span><span style="color:#ADBAC7;font-weight:bold">**文件 TODO**</span><span style="color:#ADBAC7">（磁盘上的 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7">），与内置的 </span><span style="color:#ADBAC7;font-weight:bold">**线程 TODO**</span><span style="color:#ADBAC7">（</span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7"> / </span><span style="color:#6CB6FF">`todo_write`</span><span style="color:#ADBAC7"> GUI 工具）是两套独立的系统，</span><span style="color:#ADBAC7;font-weight:bold">**互不干扰**</span><span style="color:#ADBAC7">：</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">| 系统 | 存储位置 | 用途 | 命令 |</span></span>
+<span class="line"><span style="color:#ADBAC7">|------|----------|------|------|</span></span>
+<span class="line"><span style="color:#ADBAC7">| </span><span style="color:#ADBAC7;font-weight:bold">**文件 TODO**</span><span style="color:#ADBAC7"> | </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7"> 文件（磁盘持久） | 用户的个人长期待办清单 | 本 skill 的流程 A~E |</span></span>
+<span class="line"><span style="color:#ADBAC7">| </span><span style="color:#ADBAC7;font-weight:bold">**线程 TODO**</span><span style="color:#ADBAC7"> | 内存/会话级别 | 当前 AI 对话的任务跟踪 | </span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7"> / </span><span style="color:#6CB6FF">`todo_write`</span><span style="color:#ADBAC7"> |</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**禁止混淆**</span><span style="color:#ADBAC7">：</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 收到用户 TODO 相关请求时，不要用内置 </span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7">/</span><span style="color:#6CB6FF">`todo_write`</span><span style="color:#ADBAC7"> 去替代操作 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7"> 文件</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 也不要反过来把 </span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7"> 的线程内容写入文件（除非用户明确要求"同步到 TODO.md"）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 用户说「看看我的 TODO」「加一条待办」→ 走本 skill 操作 </span><span style="color:#6CB6FF">`TODO.md`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 用户说「当前任务进度」「这个步骤完成了」→ 使用内置 </span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7">/</span><span style="color:#6CB6FF">`todo_write`</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 触发条件</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">用户发出以下任一类请求时</span><span style="color:#ADBAC7;font-weight:bold">**必须**</span><span style="color:#ADBAC7">触发本 skill：</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**查询类**</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "今天有什么工作/任务/作业"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "看看我的 TODO"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "我该做什么"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 任何涉及 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7"> 的查询</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**操作类**</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "添加 TODO""加个待办""把 XX 加进 TODO""创建 TODO"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "完成 XX""勾掉 XX""XX 完成了""标记 XX"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "改一下 XX""删除 XX""移走 XX"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "导出到桌面""同步到桌面""备份到桌面""推到桌面"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**绝对不要**</span><span style="color:#ADBAC7">依赖记忆/上下文推断 TODO 内容，每次都重新读文件。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 标准文件结构</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**位置**</span><span style="color:#ADBAC7">：</span><span style="color:#6CB6FF">`工作区中的 TODO.md`</span><span style="color:#ADBAC7">（当前工作区为 </span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span><span style="color:#ADBAC7">，可在 </span><span style="color:#6CB6FF">`TODO_FILE_PATH`</span><span style="color:#ADBAC7"> 变量中配置）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**顶部元信息**</span><span style="color:#ADBAC7">（每次写操作后必须更新日期）：</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"><span style="color:#ADBAC7"># TODO List</span></span>
+<span class="line"><span style="color:#ADBAC7">> 最后更新：YYYY-MM-DD</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**章节约定**</span><span style="color:#ADBAC7">（</span><span style="color:#6CB6FF">`## `</span><span style="color:#ADBAC7"> 标题划分）：</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#6CB6FF"> `## 日常`</span><span style="color:#ADBAC7"> —— 例行事项</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#6CB6FF"> `## 学业 / 课程`</span><span style="color:#ADBAC7"> —— 课业</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#6CB6FF"> `## 长期备忘`</span><span style="color:#ADBAC7"> —— 无明确截止</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 其它自定义分类（如 </span><span style="color:#6CB6FF">`## 随手`</span><span style="color:#ADBAC7">）原样保留</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**行格式**</span><span style="color:#ADBAC7">：</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"><span style="color:#ADBAC7">- [ ] 任务名 — 截止日期       ← 未完成</span></span>
+<span class="line"><span style="color:#ADBAC7">- [x] 任务名 — 截止日期       ← 已完成</span></span>
+<span class="line"><span style="color:#ADBAC7">- [?] 任务名                  ← 状态未知，视为未完成</span></span>
+<span class="line"><span style="color:#ADBAC7">- [ ] 子任务说明（缩进 2/4 空格）   ← 仅作注释，无勾选</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 强制执行流程</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">### 流程 A：查询 / 阅读</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### A1. 确认 TODO 文件位置</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#768390"># 默认路径（macOS）</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 若桌面也有 TODO.md，一并读取</span></span>
+<span class="line"><span style="color:#F47067">if</span><span style="color:#ADBAC7"> [ </span><span style="color:#F47067">-f</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Desktop/TODO.md"</span><span style="color:#ADBAC7"> ]; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#ADBAC7">  DESKTOP_TODO</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Desktop/TODO.md"</span></span>
+<span class="line"><span style="color:#F47067">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 没有则报错</span></span>
+<span class="line"><span style="color:#F47067">if</span><span style="color:#ADBAC7"> [ </span><span style="color:#F47067">!</span><span style="color:#F47067"> -f</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7"> ]; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#6CB6FF">  echo</span><span style="color:#96D0FF"> "未找到 TODO.md，请先创建：touch </span><span style="color:#F47067">\"</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#F47067">\"</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#6CB6FF">  exit</span><span style="color:#6CB6FF"> 1</span></span>
+<span class="line"><span style="color:#F47067">fi</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### A2. 搜索 TODO 文件（替代 fd）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#768390"># macOS 上用 find 替代 fd</span></span>
+<span class="line"><span style="color:#F69D50">find</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents"</span><span style="color:#6CB6FF"> -maxdepth</span><span style="color:#6CB6FF"> 2</span><span style="color:#6CB6FF"> -name</span><span style="color:#96D0FF"> "TODO.md"</span><span style="color:#6CB6FF"> -o</span><span style="color:#6CB6FF"> -name</span><span style="color:#96D0FF"> "todo.md"</span><span style="color:#F47067"> 2></span><span style="color:#96D0FF">/dev/null</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 若安装了 fd（可选），也可用：</span></span>
+<span class="line"><span style="color:#768390"># which fd 2>/dev/null &#x26;&#x26; fd -e md -e txt "TODO|todo" "$HOME" || echo "fd 未安装，已用 find 替代"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">若找到多个文件，</span><span style="color:#ADBAC7;font-weight:bold">**全部读取**</span><span style="color:#ADBAC7">；若只找到一个，读取该文件。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### A3. 解析勾选状态（核心）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">逐行扫描每一项：</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">| 标记 | 含义 | 处理方式 |</span></span>
+<span class="line"><span style="color:#ADBAC7">|------|------|----------|</span></span>
+<span class="line"><span style="color:#ADBAC7">| </span><span style="color:#6CB6FF">`- [x]`</span><span style="color:#ADBAC7"> | 已完成 | </span><span style="color:#ADBAC7;font-weight:bold">**绝对不要**</span><span style="color:#ADBAC7">列入待办列表 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| </span><span style="color:#6CB6FF">`- [ ]`</span><span style="color:#ADBAC7"> | 未完成 | 列入对应类别 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| </span><span style="color:#6CB6FF">`- [?]`</span><span style="color:#ADBAC7"> 或无勾选框 | 视为未完成 | 列入对应类别 |</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**红线**</span><span style="color:#ADBAC7">：把任何 </span><span style="color:#6CB6FF">`- [x]`</span><span style="color:#ADBAC7"> 项当作待办呈现 = 严重错误。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### A4. 按时间紧迫度分类呈现</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">1.</span><span style="color:#ADBAC7;font-weight:bold"> **今天必做**</span><span style="color:#ADBAC7"> —— 明确出现今天日期</span></span>
+<span class="line"><span style="color:#F69D50">2.</span><span style="color:#ADBAC7;font-weight:bold"> **本周内**</span><span style="color:#ADBAC7"> —— 截止 7 天内</span></span>
+<span class="line"><span style="color:#F69D50">3.</span><span style="color:#ADBAC7;font-weight:bold"> **下周 / 较近**</span><span style="color:#ADBAC7"> —— 截止 8-30 天</span></span>
+<span class="line"><span style="color:#F69D50">4.</span><span style="color:#ADBAC7;font-weight:bold"> **长期备忘**</span><span style="color:#ADBAC7"> —— 无明确截止或 >30 天</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">每项附上截止日期。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### A5. 输出格式</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 直接列出，</span><span style="color:#ADBAC7;font-weight:bold">**不写前言/寒暄/评价**</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 分类用二级标题或粗体</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 已完成项</span><span style="color:#ADBAC7;font-weight:bold">**只在用户明确问起时**</span><span style="color:#ADBAC7">才展示</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">### 流程 B：创建 / 添加 TODO</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### B1. 定位文件</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">优先复用 A2 的搜索结果；若 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7"> 不存在，</span><span style="color:#ADBAC7;font-weight:bold">**先创建骨架**</span><span style="color:#ADBAC7">：</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F47067">if</span><span style="color:#ADBAC7"> [ </span><span style="color:#F47067">!</span><span style="color:#F47067"> -f</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7"> ]; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#F69D50">  cat</span><span style="color:#F47067"> ></span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> &#x3C;&#x3C;</span><span style="color:#ADBAC7"> EOF</span></span>
+<span class="line"><span style="color:#96D0FF"># TODO List</span></span>
+<span class="line"><span style="color:#96D0FF">> 最后更新：$(</span><span style="color:#F69D50">date</span><span style="color:#96D0FF"> '+%Y-%m-%d')</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">## 日常</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">- [ ]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">## 学业 / 课程</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">- [ ]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">## 长期备忘</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#96D0FF">- [ ]</span></span>
+<span class="line"><span style="color:#ADBAC7">EOF</span></span>
+<span class="line"><span style="color:#6CB6FF">  echo</span><span style="color:#96D0FF"> "已创建 </span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#F47067">fi</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### B2. 解析用户输入</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">从用户消息里提取三要素：</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **任务名**</span><span style="color:#ADBAC7">（必填）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **截止日期**</span><span style="color:#ADBAC7">（可选）："今天""明天""下周三""6 月 15 日""无截止" 等</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **分类归属**</span><span style="color:#ADBAC7">（可选）：日常 / 学业 / 随手 / 长期备忘 / 用户自定义</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">未指定的字段：</span><span style="color:#ADBAC7;font-weight:bold">**先口头确认再写入**</span><span style="color:#ADBAC7">，绝不要凭空脑补。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">日期规范化（macOS BSD date）：</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "今天" → </span><span style="color:#6CB6FF">`date '+%m-%d'`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "明天" → </span><span style="color:#6CB6FF">`date -v+1d '+%m-%d'`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "后天" → </span><span style="color:#6CB6FF">`date -v+2d '+%m-%d'`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> "X 月 X 日" / "X/X" → 补齐为 </span><span style="color:#6CB6FF">`MM-dd`</span><span style="color:#ADBAC7">（跨年加年份前缀）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 无截止 → 归入"长期备忘"或加 </span><span style="color:#6CB6FF">`(无截止)`</span><span style="color:#ADBAC7"> 标记</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### B3. 写入文件（追加，绝不覆盖）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">TASK_NAME</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span><span style="color:#768390">        # 任务名</span></span>
+<span class="line"><span style="color:#ADBAC7">DUE_DATE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$2</span><span style="color:#96D0FF">"</span><span style="color:#768390">         # 截止日期（可选）</span></span>
+<span class="line"><span style="color:#ADBAC7">CATEGORY</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$3</span><span style="color:#96D0FF">"</span><span style="color:#768390">         # 分类标题（可选，默认"日常"）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 默认值</span></span>
+<span class="line"><span style="color:#ADBAC7">CATEGORY</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"${</span><span style="color:#ADBAC7">CATEGORY</span><span style="color:#F47067">:-</span><span style="color:#96D0FF">日常}"</span></span>
+<span class="line"><span style="color:#ADBAC7">LINE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"- [ ] </span><span style="color:#ADBAC7">$TASK_NAME</span><span style="color:#96D0FF">${</span><span style="color:#ADBAC7">DUE_DATE</span><span style="color:#F47067">:</span><span style="color:#96D0FF">+ — </span><span style="color:#ADBAC7">$DUE_DATE</span><span style="color:#96D0FF">}"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 找到目标分类标题的行号（BSD grep）</span></span>
+<span class="line"><span style="color:#ADBAC7">CAT_LINE</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">grep</span><span style="color:#6CB6FF"> -n</span><span style="color:#96D0FF"> "^## </span><span style="color:#ADBAC7">$CATEGORY</span><span style="color:#96D0FF">$"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> head</span><span style="color:#6CB6FF"> -1</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> cut</span><span style="color:#6CB6FF"> -d:</span><span style="color:#6CB6FF"> -f1</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F47067">if</span><span style="color:#ADBAC7"> [ </span><span style="color:#F47067">-n</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$CAT_LINE</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7"> ]; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#768390">  # 在该分类下的最后一个任务行后插入</span></span>
+<span class="line"><span style="color:#ADBAC7">  TAIL_LINE</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">tail</span><span style="color:#6CB6FF"> -n</span><span style="color:#96D0FF"> +</span><span style="color:#ADBAC7">$((</span><span style="color:#F69D50">CAT_LINE</span><span style="color:#96D0FF"> +</span><span style="color:#6CB6FF"> 1</span><span style="color:#ADBAC7">)) </span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> |</span><span style="color:#F47067"> \</span></span>
+<span class="line"><span style="color:#F69D50">    grep</span><span style="color:#6CB6FF"> -n</span><span style="color:#6CB6FF"> -m1</span><span style="color:#96D0FF"> "^## "</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> head</span><span style="color:#6CB6FF"> -1</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> cut</span><span style="color:#6CB6FF"> -d:</span><span style="color:#6CB6FF"> -f1</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"><span style="color:#ADBAC7">  </span></span>
+<span class="line"><span style="color:#F47067">  if</span><span style="color:#ADBAC7"> [ </span><span style="color:#F47067">-n</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TAIL_LINE</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7"> ]; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#ADBAC7">    INSERT_AT</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$((</span><span style="color:#F69D50">CAT_LINE</span><span style="color:#96D0FF"> +</span><span style="color:#96D0FF"> TAIL_LINE</span><span style="color:#96D0FF"> -</span><span style="color:#6CB6FF"> 1</span><span style="color:#ADBAC7">))</span></span>
+<span class="line"><span style="color:#F47067">  else</span></span>
+<span class="line"><span style="color:#ADBAC7">    INSERT_AT</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">wc</span><span style="color:#6CB6FF"> -l</span><span style="color:#F47067"> &#x3C;</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"><span style="color:#F47067">  fi</span></span>
+<span class="line"><span style="color:#ADBAC7">  </span></span>
+<span class="line"><span style="color:#768390">  # 用 sed 插入（BSD sed 兼容）</span></span>
+<span class="line"><span style="color:#F69D50">  sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$INSERT_AT</span><span style="color:#96D0FF"> a</span><span style="color:#F47067">\\</span></span>
+<span class="line"><span style="color:#ADBAC7">$LINE</span></span>
+<span class="line"><span style="color:#96D0FF">"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#F47067">else</span></span>
+<span class="line"><span style="color:#768390">  # 找不到分类，追加到文件末尾</span></span>
+<span class="line"><span style="color:#6CB6FF">  echo</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$LINE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> >></span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#6CB6FF">  echo</span><span style="color:#96D0FF"> "未找到「</span><span style="color:#ADBAC7">$CATEGORY</span><span style="color:#96D0FF">」分类，已追加到末尾，请手动整理。"</span></span>
+<span class="line"><span style="color:#F47067">fi</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**简化兜底**</span><span style="color:#ADBAC7">：如果不确定插入位置，</span><span style="color:#ADBAC7;font-weight:bold">**直接追加到文件末尾**</span><span style="color:#ADBAC7">，告知用户手动整理。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### B4. 更新"最后更新"日期</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">TODAY</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">date</span><span style="color:#96D0FF"> '+%Y-%m-%d'</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"><span style="color:#F69D50">sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "s/^> 最后更新：.*/> 最后更新：</span><span style="color:#ADBAC7">$TODAY</span><span style="color:#96D0FF">/"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### B5. 回执</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**一句话**</span><span style="color:#ADBAC7">告知：已添加哪一条、归到哪个分类。不输出完整文件。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">### 流程 C：标记完成 / 勾选</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### C1. 定位行</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">用 </span><span style="color:#6CB6FF">`grep -n`</span><span style="color:#ADBAC7"> 模糊匹配任务关键词；命中多条时</span><span style="color:#ADBAC7;font-weight:bold">**列出候选让用户确认**</span><span style="color:#ADBAC7">。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">PATTERN</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span><span style="color:#768390">   # 搜索关键词</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">grep</span><span style="color:#6CB6FF"> -n</span><span style="color:#96D0FF"> "^\- \[ \]"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> grep</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$PATTERN</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#768390"># 输出示例：15: - [ ] 写周报 — 6-15</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### C2. 替换勾选</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">PATTERN</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># BSD sed：将匹配行的 `- [ ]` 替换为 `- [x]`</span></span>
+<span class="line"><span style="color:#F69D50">sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "/</span><span style="color:#ADBAC7">$PATTERN</span><span style="color:#96D0FF">/ s/^- \[ \]/- [x]/"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### C3. 更新"最后更新"日期（同 B4）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODAY</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">date</span><span style="color:#96D0FF"> '+%Y-%m-%d'</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"><span style="color:#F69D50">sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "s/^> 最后更新：.*/> 最后更新：</span><span style="color:#ADBAC7">$TODAY</span><span style="color:#96D0FF">/"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">### 流程 D：编辑 / 删除</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### D1. 删除</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">PATTERN</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 用 grep -v 反向过滤掉匹配行，写回临时文件后替换</span></span>
+<span class="line"><span style="color:#F69D50">grep</span><span style="color:#6CB6FF"> -v</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$PATTERN</span><span style="color:#96D0FF">"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> ></span><span style="color:#96D0FF"> "${</span><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#96D0FF">}.tmp"</span><span style="color:#ADBAC7"> &#x26;&#x26; </span><span style="color:#F69D50">mv</span><span style="color:#96D0FF"> "${</span><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#96D0FF">}.tmp"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### D2. 编辑</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">定位行 → 整行替换 → 写回。</span><span style="color:#ADBAC7;font-weight:bold">**不要做局部字符串替换**</span><span style="color:#ADBAC7">以免破坏 Markdown 结构。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">TODO_FILE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span></span>
+<span class="line"><span style="color:#ADBAC7">LINE_NUM</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">NEW_LINE</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$2</span><span style="color:#96D0FF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "${</span><span style="color:#ADBAC7">LINE_NUM</span><span style="color:#96D0FF">}s/.*/</span><span style="color:#ADBAC7">$NEW_LINE</span><span style="color:#96D0FF">/"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$TODO_FILE</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### D3. 更新日期（同 B4）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">### 流程 E：导出 / 同步到桌面</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**触发场景**</span><span style="color:#ADBAC7">：</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 当前在项目子目录（如 </span><span style="color:#6CB6FF">`项目A/子任务/`</span><span style="color:#ADBAC7">），该目录里有 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7">，要推送到桌面主文件</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 用户要求"导出桌面""同步桌面""备份到桌面"</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 工作目录下临时 TODO 要落到桌面</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### E1. 判定方向</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">| 来源 | 目标 | 操作 |</span></span>
+<span class="line"><span style="color:#ADBAC7">|------|------|------|</span></span>
+<span class="line"><span style="color:#ADBAC7">| 项目子目录 </span><span style="color:#6CB6FF">`TODO.md`</span><span style="color:#ADBAC7"> | 桌面 </span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span><span style="color:#ADBAC7"> | </span><span style="color:#ADBAC7;font-weight:bold">**合并追加**</span><span style="color:#ADBAC7">（不覆盖） |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 桌面 </span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span><span style="color:#ADBAC7"> | 项目子目录 | 复制（</span><span style="color:#ADBAC7;font-weight:bold">**先确认**</span><span style="color:#ADBAC7">） |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 内存草稿 / 单条 TODO | 桌面 | 走流程 B 追加 |</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### E2. 合并追加（最常用）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#ADBAC7">SRC</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#6CB6FF">$1</span><span style="color:#96D0FF">"</span><span style="color:#768390">                         # 来源文件</span></span>
+<span class="line"><span style="color:#ADBAC7">DST</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">$HOME</span><span style="color:#96D0FF">/Documents/TODO.md"</span><span style="color:#768390">    # 目标文件（macOS）</span></span>
+<span class="line"><span style="color:#ADBAC7">TODAY</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">date</span><span style="color:#96D0FF"> '+%Y-%m-%d'</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 1. 抽取源文件的勾选项</span></span>
+<span class="line"><span style="color:#ADBAC7">SRC_ITEMS</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">grep</span><span style="color:#96D0FF"> "^- "</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$SRC</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> 2></span><span style="color:#96D0FF">/dev/null</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 2. 抽取桌面文件已有的"任务正文"（去掉勾选标记）</span></span>
+<span class="line"><span style="color:#ADBAC7">DST_BODIES</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#F69D50">grep</span><span style="color:#96D0FF"> "^- "</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$DST</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> 2></span><span style="color:#96D0FF">/dev/null</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> sed</span><span style="color:#96D0FF"> 's/^- \[[ x?]\] //'</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 3. 找出未在桌面出现的项</span></span>
+<span class="line"><span style="color:#F47067">while</span><span style="color:#ADBAC7"> IFS</span><span style="color:#F47067">=</span><span style="color:#6CB6FF"> read</span><span style="color:#6CB6FF"> -r</span><span style="color:#96D0FF"> item</span><span style="color:#ADBAC7">; </span><span style="color:#F47067">do</span></span>
+<span class="line"><span style="color:#ADBAC7">  BODY</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$(</span><span style="color:#6CB6FF">echo</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$item</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> sed</span><span style="color:#96D0FF"> 's/^- \[[ x?]\] //'</span><span style="color:#ADBAC7">)</span></span>
+<span class="line"><span style="color:#F47067">  if</span><span style="color:#F47067"> !</span><span style="color:#6CB6FF"> echo</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$DST_BODIES</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> |</span><span style="color:#F69D50"> grep</span><span style="color:#6CB6FF"> -Fxq</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$BODY</span><span style="color:#96D0FF">"</span><span style="color:#ADBAC7">; </span><span style="color:#F47067">then</span></span>
+<span class="line"><span style="color:#6CB6FF">    echo</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$item</span><span style="color:#96D0FF">"</span><span style="color:#F47067"> >></span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$DST</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">    COUNT</span><span style="color:#F47067">=</span><span style="color:#ADBAC7">$((</span><span style="color:#F69D50">COUNT</span><span style="color:#96D0FF"> +</span><span style="color:#6CB6FF"> 1</span><span style="color:#ADBAC7">))</span></span>
+<span class="line"><span style="color:#F47067">  fi</span></span>
+<span class="line"><span style="color:#F47067">done</span><span style="color:#F47067"> &#x3C;&#x3C;&#x3C;</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$SRC_ITEMS</span><span style="color:#96D0FF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#768390"># 4. 更新"最后更新"</span></span>
+<span class="line"><span style="color:#F69D50">sed</span><span style="color:#6CB6FF"> -i</span><span style="color:#96D0FF"> ''</span><span style="color:#96D0FF"> "s/^> 最后更新：.*/> 最后更新：</span><span style="color:#ADBAC7">$TODAY</span><span style="color:#96D0FF">/"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$DST</span><span style="color:#96D0FF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF">echo</span><span style="color:#96D0FF"> "已同步 ${</span><span style="color:#ADBAC7">COUNT</span><span style="color:#F47067">:-</span><span style="color:#ADBAC7">0</span><span style="color:#96D0FF">} 条到 </span><span style="color:#ADBAC7">$DST</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### E3. 仅复制（覆盖）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">```bash</span></span>
+<span class="line"><span style="color:#F69D50">cp</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$SRC</span><span style="color:#96D0FF">"</span><span style="color:#96D0FF"> "</span><span style="color:#ADBAC7">$DST</span><span style="color:#96D0FF">"</span></span>
+<span class="line"><span style="color:#ADBAC7">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7;font-weight:bold">**仅在用户明确说"覆盖"时**</span><span style="color:#ADBAC7">才用（不带确认）。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">#### E4. 回执</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">告知用户：已同步 N 条到 </span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span><span style="color:#ADBAC7">，日期已更新为 YYYY-MM-DD。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 文件路径</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **标准位置（macOS）**</span><span style="color:#ADBAC7">：</span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **备选位置**</span><span style="color:#ADBAC7">：</span><span style="color:#6CB6FF">`~/Desktop/TODO.md`</span><span style="color:#ADBAC7">（若有，一并读取）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **子目录**</span><span style="color:#ADBAC7">：</span><span style="color:#6CB6FF">`项目目录/xxx.md`</span><span style="color:#ADBAC7"> 等按 </span><span style="color:#6CB6FF">`find`</span><span style="color:#ADBAC7"> 搜索结果为准</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 禁止行为</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 凭记忆/上下文推断 TODO 内容，每次先读文件</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 把 </span><span style="color:#6CB6FF">`- [x]`</span><span style="color:#ADBAC7"> 误判为 </span><span style="color:#6CB6FF">`- [ ]`</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 用 </span><span style="color:#6CB6FF">`>`</span><span style="color:#ADBAC7"> / </span><span style="color:#6CB6FF">`cat >`</span><span style="color:#ADBAC7"> 整文件覆盖 TODO.md（丢失其它章节）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 在用户没问"已完成什么"时主动展示已完成清单</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 内置 </span><span style="color:#6CB6FF">`todo_list`</span><span style="color:#ADBAC7">/</span><span style="color:#6CB6FF">`todo_write`</span><span style="color:#ADBAC7"> 与文件 TODO 混用</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 未经用户确认就覆盖桌面主文件</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 凭空补全用户没说的任务名、截止日期、分类</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7"> 写入失败时闷头继续下一项（必须停下来报告）</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## 操作速查</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ADBAC7">| 场景 | 命令摘要 |</span></span>
+<span class="line"><span style="color:#ADBAC7">|------|----------|</span></span>
+<span class="line"><span style="color:#ADBAC7">| 查今天待办 | 流程 A：读文件 → 分类呈现 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 加一条 TODO | 流程 B：解析 → 追加 → 更新日期 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 勾掉一项 | 流程 C：</span><span style="color:#6CB6FF">`grep -n`</span><span style="color:#ADBAC7"> → </span><span style="color:#6CB6FF">`sed 's/- [ ]/- [x]/'`</span><span style="color:#ADBAC7"> |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 删一项 | 流程 D1：</span><span style="color:#6CB6FF">`grep -v`</span><span style="color:#ADBAC7"> → 写回 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 改一项 | 流程 D2：定位行 → </span><span style="color:#6CB6FF">`sed`</span><span style="color:#ADBAC7"> 整行替换 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 同步到桌面 | 流程 E2：去重合并追加 |</span></span>
+<span class="line"><span style="color:#ADBAC7">| 覆盖桌面 | 流程 E3：</span><span style="color:#6CB6FF">`cp`</span><span style="color:#ADBAC7">（需确认） |</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6CB6FF;font-weight:bold">## macOS 环境说明</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **Shell**</span><span style="color:#ADBAC7">：Bash / Zsh（macOS 默认 Zsh）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **路径**</span><span style="color:#ADBAC7">：</span><span style="color:#6CB6FF">`~/Documents/TODO.md`</span><span style="color:#ADBAC7">（工作区）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **date 命令**</span><span style="color:#ADBAC7">：macOS BSD date（</span><span style="color:#6CB6FF">`date '+%Y-%m-%d'`</span><span style="color:#ADBAC7">，</span><span style="color:#6CB6FF">`date -v+1d`</span><span style="color:#ADBAC7"> 表示明天）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **sed**</span><span style="color:#ADBAC7">：macOS BSD sed（</span><span style="color:#6CB6FF">`-i ''`</span><span style="color:#ADBAC7"> 需加空字符串参数）</span></span>
+<span class="line"><span style="color:#F69D50">-</span><span style="color:#ADBAC7;font-weight:bold"> **fd 替代**</span><span style="color:#ADBAC7">：macOS 未预装 fd，用 </span><span style="color:#6CB6FF">`find`</span><span style="color:#ADBAC7"> 替代；若需安装：</span><span style="color:#6CB6FF">`brew install fd`</span></span></code></pre>
+<h2 id="安装方式">安装方式</h2>
+<p>将以上内容保存为 <code>SKILL.md</code>，放置到 Codex 的 skills 目录：</p>
+<pre class="astro-code github-dark-dimmed" style="background-color:#22272e;color:#adbac7; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.agents/skills/TODO-Handler/SKILL.md</span></span></code></pre>
+<p>之后在 Codex CLI 中直接说出触发词（如「看看我的 TODO」「加一条待办」），AI 助手即按本规范执行操作。</p>
+<h2 id="许可">许可</h2>
+<p>MIT License</p>
+<p>Copyright (c) 2026 Shiorangerin</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p> </div> </article>  </div> </main> </div> <nav class="mobile-nav" aria-label="移动端导航"> <a href="/" class="mobile-nav-item " aria-label="首页"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"></path><path d="M9 21V13h6v8"></path> </svg>   <span>首页</span> </a><a href="/blog" class="mobile-nav-item active" aria-label="博客" aria-current="page">  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path> </svg>  <span>博客</span> </a><a href="/about" class="mobile-nav-item " aria-label="关于">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path> </svg> <span>关于</span> </a> <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换深色模式"> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path> </svg> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> </nav> <script type="module">localStorage.getItem("theme")!=="light"?document.documentElement.setAttribute("data-theme","dark"):document.documentElement.removeAttribute("data-theme");</script></body></html> <script type="module">document.querySelectorAll(".blog-post-content pre").forEach(e=>{const t=document.createElement("button");t.className="copy-btn",t.textContent="Copy",t.addEventListener("click",async()=>{const o=e.querySelector("code")?.textContent??"";await navigator.clipboard.writeText(o),t.textContent="Copied",t.classList.add("copied"),setTimeout(()=>{t.textContent="Copy",t.classList.remove("copied")},2e3)}),e.appendChild(t)});</script>

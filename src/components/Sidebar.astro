@@ -40,6 +40,7 @@ const iconMap: Record<string, string> = {
       <a
         href={item.href}
         class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
+        aria-current={isActive(item.href, currentPath) ? "page" : undefined}
       >
         <Fragment set:html={iconMap[item.icon] ?? ""} />
         <span>{item.label}</span>

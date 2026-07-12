@@ -33,18 +33,25 @@ const mobileNav = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
+    <link rel="canonical" href={Astro.url.href} />
     <meta name="description" content={desc} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
     {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="Shiorangerin" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@shiorangerin" />
+    <meta name="twitter:creator" content="@shiorangerin" />
     <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
     <link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href={base + "rss.xml"} />
   </head>
   <body style={`background-image: url(${base}wallpaper.png)`}>
+    <a href="#main-content" class="skip-link">跳到主要内容</a>
     <script>
       (() => {
         const stored = localStorage.getItem("theme");
@@ -58,7 +65,7 @@ const mobileNav = [
 
     <div class="page-wrapper">
       <Sidebar currentPath={currentPath} />
-      <main class="main-content">
+      <main class="main-content" id="main-content">
         <div class="content-container">
           <slot />
         </div>
@@ -71,6 +78,7 @@ const mobileNav = [
           href={item.href}
           class={`mobile-nav-item ${isActive(item.href, currentPath) ? "active" : ""}`}
           aria-label={item.label}
+          aria-current={isActive(item.href, currentPath) ? "page" : undefined}
         >
           {item.icon === "house" && (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

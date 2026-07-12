@@ -11,51 +11,34 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
 <BaseLayout title="首页" description="Shiorangerin 的个人站点，以 macOS 设计语言构建。">
   <section class="animate-in">
-    <div class="glass-card" style="padding: 3rem 2.75rem;">
-      <p class="badge" style="margin-bottom: 1rem;">欢迎</p>
-      <h1 style="font-size: 2.75rem; margin-bottom: 0.85rem; line-height: 1.12;">
-        你好，你就当我是个<span style="color: var(--accent);">橘子</span>
+    <div class="glass-card">
+      <p class="badge">欢迎</p>
+      <h1>
+        你好，你就当我是个<span>橘子</span>
       </h1>
-      <p style="font-size: 1.15rem; max-width: 540px; line-height: 1.7;">
+      <p>
         这里是一些经验的存储，免得我忘记，人总会记性不好。
       </p>
-      <div style="display: flex; gap: 0.75rem; margin-top: 1.75rem;">
-        <a
-          href={base + "blog"}
-          style="
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 590;
-            background: var(--accent); color: #fff; border-radius: var(--radius-full);
-            text-decoration: none;
-          "
-        >
+      <div>
+        <a href={base + "blog"}>
           读博客
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
         </a>
-        <a
-          href={base + "about"}
-          style="
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 590;
-            background: var(--bg-subtle); color: var(--text-primary);
-            border-radius: var(--radius-full); border: 0.5px solid var(--border);
-            text-decoration: none;
-          "
-        >
+        <a href={base + "about"}>
           关于我
         </a>
       </div>
     </div>
   </section>
 
-  <section style="margin-top: 1.5rem;">
-    <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem;">
+  <section>
+    <h2>
       最近文章
     </h2>
     {
       recentPosts.length === 0 ? (
         <div class="glass-card empty-state">
-          <p style="margin: 0;">暂无文章，稍后再来看看。</p>
+          <p>暂无文章，稍后再来看看。</p>
         </div>
       ) : (
         recentPosts.map((post, i) => (
@@ -66,7 +49,7 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
       )
     }
     {recentPosts.length > 0 && (
-      <a href={base + "blog"} style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; padding: 0.55rem 1.3rem; font-size: 0.85rem; font-weight: 590; background: var(--accent); color: #fff; border-radius: var(--radius-full); text-decoration: none;">
+      <a href={base + "blog"}>
         查看全部 &rarr;
       </a>
     )}
