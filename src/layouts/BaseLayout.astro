@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 import Sidebar from "../components/Sidebar.astro";
-import LiquidGlass from "../components/LiquidGlass.astro";
 
 interface Props {
   title: string;
@@ -53,16 +52,6 @@ const mobileNav = [
   </head>
   <body style={`background-image: url(${base}wallpaper.webp)`}>
     <a href="#main-content" class="skip-link">跳到主要内容</a>
-
-    <svg aria-hidden="true" style="position:fixed;width:0;height:0;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="liquid_glass_filter" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" x="-20%" y="-20%" width="140%" height="140%">
-          <feImage id="lg_map" result="map" width="64" height="64" />
-          <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" scale="16" />
-        </filter>
-      </defs>
-    </svg>
-
     <script>
       (() => {
         const stored = localStorage.getItem("theme");
@@ -83,108 +72,53 @@ const mobileNav = [
       </main>
     </div>
 
-    <LiquidGlass borderRadius="22px" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 200; width: auto;">
-      <nav class="mobile-nav" aria-label="移动端导航">
-        {mobileNav.map((item) => (
-          <a
-            href={item.href}
-            class={`mobile-nav-item ${isActive(item.href, currentPath) ? "active" : ""}`}
-            aria-label={item.label}
-            aria-current={isActive(item.href, currentPath) ? "page" : undefined}
-          >
-            {item.icon === "house" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/>
-              </svg>
-            )}
-            {item.icon === "pen" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-            )}
-            {item.icon === "person" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
-              </svg>
-            )}
-            <span>{item.label}</span>
-          </a>
-        ))}
-        <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换深色模式">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </nav>
-    </LiquidGlass>
-  <script>
-    document.getElementById("mobile-theme-toggle")?.addEventListener("click", () => {
-      const isDark = document.documentElement.hasAttribute("data-theme");
-      if (isDark) {
-        document.documentElement.removeAttribute("data-theme");
-        localStorage.setItem("theme", "light");
-      } else {
-        document.documentElement.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-      }
-    });
-  </script>
-  <script>
-    (function() {
-      var W = 64, H = 64;
-      var canvas = document.createElement("canvas");
-      canvas.width = W; canvas.height = H;
-      var ctx = canvas.getContext("2d");
-      var mapImg = document.getElementById("lg_map");
-      var mx = 0.5, my = 0.5, time = 0;
-      var raf = 0, lastMove = 0;
-
-      function update() {
-        time += 0.015;
-        if (!ctx || !mapImg) return;
-        var d = ctx.createImageData(W, H);
-        var data = d.data;
-        for (var y = 0; y < H; y++) {
-          for (var x = 0; x < W; x++) {
-            var i = (y * W + x) * 4;
-            var nx = x / W, ny = y / H;
-            var w1 = Math.sin(nx * 8 + time * 0.6) * Math.cos(ny * 6 + time * 0.4);
-            var w2 = Math.cos(ny * 10 - time * 0.5) * Math.sin(nx * 7 + time * 0.7);
-            var w3 = Math.sin((nx + ny) * 12 + time) * 0.5;
-            var dx = nx - mx;
-            var dy = ny - my;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            var ripple = Math.sin(dist * 24 - time * 3) * 0.2 * Math.max(0, 1 - dist * 2);
-            var dispX = w1 * 0.25 + w3 * 0.15 + dx * ripple;
-            var dispY = w2 * 0.25 + w3 * 0.15 + dy * ripple;
-            data[i] = (dispX * 0.5 + 0.5) * 255;
-            data[i + 1] = (dispY * 0.5 + 0.5) * 255;
-            data[i + 2] = 128;
-            data[i + 3] = 255;
-          }
-        }
-        ctx.putImageData(d, 0, 0);
-        mapImg.setAttribute("href", canvas.toDataURL());
-        var now = performance.now();
-        if (now - lastMove < 3000) {
-          raf = requestAnimationFrame(update);
-        } else {
-          raf = 0;
-        }
-      }
-
-      document.addEventListener("mousemove", function(e) {
-        mx = e.clientX / window.innerWidth;
-        my = e.clientY / window.innerHeight;
-        lastMove = performance.now();
-        if (!raf) raf = requestAnimationFrame(update);
-      });
-
-      update();
-    })();
-  </script>
+    <nav class="mobile-nav" aria-label="移动端导航">
+      {mobileNav.map((item) => (
+        <a
+          href={item.href}
+          class={`mobile-nav-item ${isActive(item.href, currentPath) ? "active" : ""}`}
+          aria-label={item.label}
+          aria-current={isActive(item.href, currentPath) ? "page" : undefined}
+        >
+          {item.icon === "house" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/>
+            </svg>
+          )}
+          {item.icon === "pen" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          )}
+          {item.icon === "person" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+            </svg>
+          )}
+          <span>{item.label}</span>
+        </a>
+      ))}
+      <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换深色模式">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </nav>
   </body>
 </html>
+
+<script>
+  document.getElementById("mobile-theme-toggle")?.addEventListener("click", () => {
+    const isDark = document.documentElement.hasAttribute("data-theme");
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    }
+  });
+</script>

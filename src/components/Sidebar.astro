@@ -1,6 +1,4 @@
 ---
-import LiquidGlass from "./LiquidGlass.astro";
-
 interface Props {
   currentPath: string;
 }
@@ -27,50 +25,46 @@ const iconMap: Record<string, string> = {
 ---
 
 <aside class="sidebar">
-  <LiquidGlass borderRadius="22px" style="position: absolute; inset: 0; height: 100%; width: 100%;">
-    <div class="sidebar-content" style="display: flex; flex-direction: column; padding: 2.25rem 1rem 1.25rem; height: 100%;">
-      <a href={base} class="sidebar-profile" style="text-decoration: none; color: inherit;">
-        <img src={base + "avatar.jpg"} alt="Avatar" class="sidebar-avatar" />
-        <div>
-          <div class="sidebar-name">Shiorangerin</div>
-          <div class="sidebar-handle">@shiorangerin</div>
-        </div>
-      </a>
-
-      <div class="sidebar-section-label">导航</div>
-
-      <nav class="sidebar-nav">
-        {navItems.map((item) => (
-          <a
-            href={item.href}
-            class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
-            aria-current={isActive(item.href, currentPath) ? "page" : undefined}
-          >
-            <Fragment set:html={iconMap[item.icon] ?? ""} />
-            <span>{item.label}</span>
-          </a>
-        ))}
-      </nav>
-
-      <div class="sidebar-footer">
-        <span class="theme-label">外观</span>
-        <button
-          id="theme-toggle"
-          class="theme-toggle"
-          aria-label="切换深色模式"
-          title="切换深色模式"
-        >
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </div>
+  <a href={base} class="sidebar-profile" style="text-decoration: none; color: inherit;">
+    <img src={base + "avatar.jpg"} alt="Avatar" class="sidebar-avatar" />
+    <div>
+      <div class="sidebar-name">Shiorangerin</div>
+      <div class="sidebar-handle">@shiorangerin</div>
     </div>
-  </LiquidGlass>
+  </a>
+
+  <div class="sidebar-section-label">导航</div>
+
+  <nav class="sidebar-nav">
+    {navItems.map((item) => (
+      <a
+        href={item.href}
+        class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
+        aria-current={isActive(item.href, currentPath) ? "page" : undefined}
+      >
+        <Fragment set:html={iconMap[item.icon] ?? ""} />
+        <span>{item.label}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="theme-label">外观</span>
+    <button
+      id="theme-toggle"
+      class="theme-toggle"
+      aria-label="切换深色模式"
+      title="切换深色模式"
+    >
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
 </aside>
 
 <script>

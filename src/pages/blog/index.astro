@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogCard from "../../components/BlogCard.astro";
-import LiquidGlass from "../../components/LiquidGlass.astro";
 import SearchBar from "../../components/SearchBar.astro";
 import { getCollection } from "astro:content";
 
@@ -12,22 +11,20 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
 <BaseLayout title="博客" description="一些杂谈和碎碎念。">
   <section class="animate-in">
-    <LiquidGlass borderRadius="22px">
-      <div class="glass-card">
-        <h1>博客</h1>
-        <p>
-          一些杂谈和碎碎念。
-        </p>
-        <div class="tags">
-          <a href={base + "rss.xml"} class="rss-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
-            </svg>
-            RSS
-          </a>
-        </div>
+    <div class="glass-card">
+      <h1>博客</h1>
+      <p>
+        一些杂谈和碎碎念。
+      </p>
+      <div class="tags">
+        <a href={base + "rss.xml"} class="rss-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
+          </svg>
+          RSS
+        </a>
       </div>
-    </LiquidGlass>
+    </div>
   </section>
 
   <section style="margin-top: 1.5rem;">
@@ -35,13 +32,11 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
     <div id="blog-list">
       {
         posts.length === 0 ? (
-          <LiquidGlass borderRadius="22px">
-            <div class="glass-card animate-in">
-              <p style="text-align: center; color: var(--text-tertiary); margin: 0;">
-                暂无文章，稍后再来看看。
-              </p>
-            </div>
-          </LiquidGlass>
+          <div class="glass-card animate-in">
+            <p style="text-align: center; color: var(--text-tertiary); margin: 0;">
+              暂无文章，稍后再来看看。
+            </p>
+          </div>
         ) : (
           posts.map((post, i) => (
             <div class={`animate-in stagger-${Math.min(i + 1, 4)}`}>
