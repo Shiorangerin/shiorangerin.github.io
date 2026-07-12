@@ -138,8 +138,6 @@ a:hover { color: var(--accent-hover); }
   background: var(--bg-sidebar);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  filter: url(#liquid-glass);
-  -webkit-filter: url(#liquid-glass);
   border-right: 0.5px solid var(--border);
   display: flex; flex-direction: column;
   padding: 2.25rem 1rem 1.25rem;
@@ -233,8 +231,6 @@ a:hover { color: var(--accent-hover); }
   background: var(--bg-glass);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  filter: url(#liquid-glass);
-  -webkit-filter: url(#liquid-glass);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -270,8 +266,6 @@ a:hover { color: var(--accent-hover); }
   background: var(--bg-glass);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  filter: url(#liquid-glass);
-  -webkit-filter: url(#liquid-glass);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -478,8 +472,6 @@ a:hover { color: var(--accent-hover); }
     background: var(--bg-glass);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    filter: url(#liquid-glass);
-    -webkit-filter: url(#liquid-glass);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-xl);
     box-shadow: 0 2px 16px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.04);
