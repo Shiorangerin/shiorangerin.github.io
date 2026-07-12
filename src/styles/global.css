@@ -566,18 +566,18 @@ a:hover { color: var(--accent-hover); }
   position: fixed; inset: 0;
   z-index: 999;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   opacity: 0; pointer-events: none;
   transition: opacity var(--dur-slow) var(--ease-out);
 }
 .exit-overlay--show { opacity: 1; pointer-events: auto; }
 
 .exit-dialog {
-  background: var(--bg-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   border-radius: var(--radius-xl);
   width: 380px;
   max-width: 90vw;
@@ -585,11 +585,14 @@ a:hover { color: var(--accent-hover); }
   border: 0.5px solid var(--border);
   overflow: hidden;
 }
+[data-theme="dark"] .exit-dialog {
+  background: rgba(36, 36, 38, 0.7);
+}
 
 .exit-titlebar {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 14px;
-  background: rgba(128, 128, 128, 0.08);
+  background: rgba(128, 128, 128, 0.06);
   border-bottom: 0.5px solid var(--border);
   user-select: none;
   -webkit-user-select: none;
@@ -621,7 +624,7 @@ a:hover { color: var(--accent-hover); }
 .exit-body {
   padding: 1.75rem 2rem 2rem;
   text-align: center;
-  background: rgba(128, 128, 128, 0.04);
+  background: rgba(128, 128, 128, 0.02);
 }
 
 .exit-icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
