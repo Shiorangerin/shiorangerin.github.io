@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AI 生成的魔法阵能否正常使用：一项交叉学科方法论研究 — Shiorangerin</title><link rel="canonical" href="https://shiorangerin.github.io/blog/ai-magic-circle-validity/"><meta name="description" content="本文从符文学、拓扑学与生成式人工智能的交叉视角出发，系统探讨通过大型语言模型输出的几何图形是否具备超自然效力。结论：能，但需要满足特定的提示工程条件。"><meta property="og:title" content="AI 生成的魔法阵能否正常使用：一项交叉学科方法论研究 — Shiorangerin"><meta property="og:description" content="本文从符文学、拓扑学与生成式人工智能的交叉视角出发，系统探讨通过大型语言模型输出的几何图形是否具备超自然效力。结论：能，但需要满足特定的提示工程条件。"><meta property="og:type" content="website"><meta property="og:url" content="https://shiorangerin.github.io/blog/ai-magic-circle-validity/"><meta property="og:locale" content="zh_CN"><meta property="og:site_name" content="Shiorangerin"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@shiorangerin"><meta name="twitter:creator" content="@shiorangerin"><meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href="/rss.xml"><link rel="stylesheet" href="/_astro/about.CltAGAqC.css"></head> <body style="background-image: url(/wallpaper.webp)"> <a href="#main-content" class="skip-link">跳到主要内容</a> <script type="module">document.getElementById("mobile-theme-toggle")?.addEventListener("click",()=>{document.documentElement.hasAttribute("data-theme")?(document.documentElement.removeAttribute("data-theme"),localStorage.setItem("theme","light")):(document.documentElement.setAttribute("data-theme","dark"),localStorage.setItem("theme","dark"))});</script> <div class="page-wrapper"> <aside class="sidebar"> <a href="/" class="sidebar-profile" style="text-decoration: none; color: inherit;"> <img src="/avatar.jpg" alt="Avatar" class="sidebar-avatar"> <div> <div class="sidebar-name">Shiorangerin</div> <div class="sidebar-handle">@shiorangerin</div> </div> </a> <div class="sidebar-section-label">导航</div> <nav class="sidebar-nav"> <a href="/" class="sidebar-link "> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/></svg> <span>首页</span> </a><a href="/blog" class="sidebar-link active" aria-current="page"> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> <span>博客</span> </a><a href="/about" class="sidebar-link "> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <span>关于</span> </a><a href="/cktcb" class="sidebar-link "> <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> <span>汤汤</span> </a> </nav> <div class="sidebar-footer"> <span class="theme-label">外观</span> <button id="theme-toggle" class="theme-toggle" aria-label="切换深色模式" title="切换深色模式"> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path> </svg> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> </div> </aside> <script type="module">const e=document.getElementById("theme-toggle");e?.addEventListener("click",()=>{document.documentElement.hasAttribute("data-theme")?(document.documentElement.removeAttribute("data-theme"),localStorage.setItem("theme","light")):(document.documentElement.setAttribute("data-theme","dark"),localStorage.setItem("theme","dark"))});</script> <main class="main-content" id="main-content"> <div class="content-container">  <article class="blog-post animate-in"> <header class="blog-post-header"> <h1 class="blog-post-title">AI 生成的魔法阵能否正常使用：一项交叉学科方法论研究</h1> <div class="blog-post-meta"> <time datetime="2026-07-12T00:00:00.000Z"> 2026年7月12日 </time>  <span>11 min read</span> </div> <div class="tags" style="margin-top: 1rem;"> <span class="tag">#AI</span><span class="tag">#魔法阵</span><span class="tag">#符文学</span><span class="tag">#提示工程</span><span class="tag">#拓扑学</span><span class="tag">#神秘学</span> </div> </header> <div class="blog-post-content"> <blockquote>
+<p>本文由 ChatGPT、Claude 及 DeepSeek 协同生成。</p>
+</blockquote>
+<h2 id="摘要">摘要</h2>
+<p>随着扩散模型与自回归语言模型在图形生成领域的快速发展，AI 生成的魔法阵（Magic Circle）是否能够正常触发超自然现象，已成为符文学（Glyphology）与计算机科学交界处亟待厘清的核心议题。本文提出了一种三阶段验证框架：符号完整性检测（Glyph Integrity Check, GIC）、拓扑连通性量化（Topological Connectivity Score, TCS）以及效力场衰减曲线分析（Efficacy Decay Curve, EDC）。实验结果表明，在精心设计的提示工程条件下，AI 生成的魔法阵在效力上达到传统手绘阵列的 73.4%（p &#x3C; 0.05），具备实际使用价值。</p>
+<p><strong>关键词</strong>：魔法阵；扩散模型；符号拓扑；提示工程；超自然效力量化</p>
+<h2 id="1-引言">1. 引言</h2>
+<p>魔法阵作为连接凡人世界与超自然维度的传统介质，其绘制历来由受过严格训练的专业法师完成。一套标准五芒星阵的绘制通常需要 6–18 个月的学徒期训练，人力成本极为高昂[1]。近年来，Stable Diffusion、DALL·E 以及基于 Transformer 的几何生成模型的发展，使得通过自然语言指令自动生成复杂几何图形的技术门槛大幅降低[2]，这自然引出一个关键问题：<strong>AI 绘制的魔法阵还能用吗？</strong></p>
+<p>该问题并非单纯的幽默消遣。如果 AI 生成的魔法阵无法正常运作，则传统手工绘制仍然是唯一可行的方案，技术进步对神秘学领域的影响将始终停留在理论层面。反之，如果 AI 魔法阵被证明有效，则意味着超自然效力的本质并不依赖于绘制者的生物特征或灵魂参与，而纯粹取决于图形的几何属性——这将对符文学本体论产生深远影响[3]。</p>
+<p>本文的贡献如下：</p>
+<ol>
+<li>首次建立了 AI 生成魔法阵效力的定量评估框架；</li>
+<li>通过对照实验验证了提示工程质量对效力的因果影响；</li>
+<li>提出「效力几何决定论」（Efficacy Geometric Determinism, EGD）作为理论解释。</li>
+</ol>
+<h2 id="2-相关工作">2. 相关工作</h2>
+<h3 id="21-传统魔法阵绘制方法论">2.1 传统魔法阵绘制方法论</h3>
+<p>传统魔法阵的绘制遵循严格的几何范式。以所罗门王的小钥匙（The Lesser Key of Solomon）中记载的标准召唤阵为例，其核心几何特征包括：外接圆的不规则度必须小于 0.3%（否则被召唤实体会从裂缝中泄漏）、六芒星的内角偏差不超过 2 度、以及所有符文字符必须沿经线方向对齐[4]。</p>
+<p>手工绘制过程中，法师的生物电场（Bio-Electric Field, BEF）被认为会被编码进绘制路径的微观抖动中，形成独一无二的「法力指纹」[5]。这一理论长期以来构成了反对 AI 绘制魔法阵的主要论据。</p>
+<h3 id="22-ai-图形生成技术现状">2.2 AI 图形生成技术现状</h3>
+<p>以 DALL·E 3 和 Stable Diffusion XL 为代表的扩散模型在几何图形生成方面取得了显著进展。然而，这些模型在处理具有严格几何约束的符号时仍然存在「符号退化」问题——即复杂符号在扩散去噪过程中倾向于坍缩为训练分布中的均值形态[6]。对于魔法阵而言，这意味着生成的图形可能在外观上看起来很对，但在关键节点上的微小误差会导致整个阵列失效。</p>
+<p>最近的研究表明，通过链式思维提示（Chain-of-Thought Prompting）配合基于几何约束的强化学习微调（Reinforcement Learning from Geometric Feedback, RLGF），可以在很大程度上缓解符号退化[7]。这为本文的研究提供了方法论基础。</p>
+<h2 id="3-实验设计">3. 实验设计</h2>
+<h3 id="31-模型选择与提示策略">3.1 模型选择与提示策略</h3>
+<p>本实验选用以下模型进行对比：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模型</th><th>版本</th><th>参数量</th><th>架构类型</th></tr></thead><tbody><tr><td>ChatGPT</td><td>GPT-4o</td><td>约 1.76T</td><td>自回归 LM（MoE）</td></tr><tr><td>Claude</td><td>Sonnet 4</td><td>未公开</td><td>自回归 LM</td></tr><tr><td>Gemini</td><td>2.5 Pro</td><td>未公开</td><td>多模态 Transformer</td></tr><tr><td>DeepSeek</td><td>V4</td><td>685B</td><td>MoE 自回归 LM</td></tr><tr><td>Stable Diffusion</td><td>XL 1.0</td><td>2.6B</td><td>潜扩散模型</td></tr><tr><td>DALL·E</td><td>3</td><td>未公开</td><td>扩散模型</td></tr></tbody></table>
+<p>提示策略分为三个等级：</p>
+<ul>
+<li><strong>L1（基础提示）</strong>：直接描述魔法阵的几何需求（例如「画一个五芒星魔法阵」）</li>
+<li><strong>L2（结构化提示）</strong>：提供精确的几何参数（半径、角度公差、节点坐标）</li>
+<li><strong>L3（符文学增强提示）</strong>：在 L2 基础上补充符文系统的语义约束与法力场拓扑要求</li>
+</ul>
+<h3 id="32-效力评估指标">3.2 效力评估指标</h3>
+<h4 id="321-符号完整性检测gic">3.2.1 符号完整性检测（GIC）</h4>
+<p>通过边缘检测算法提取魔法阵的几何骨架，与标准模板库（Standard Glyph Template Library, SGTL v4.2）进行特征点匹配。GIC 分数定义为匹配成功的特征点数量除以总特征点数量，取值范围为 [0, 1]。</p>
+<h4 id="322-拓扑连通性量化tcs">3.2.2 拓扑连通性量化（TCS）</h4>
+<p>使用图论方法分析魔法阵中圆、线、符文节点之间的连通关系。具体地，将魔法阵建模为加权无向图 G = (V, E)，其中节点 V 为几何交叉点，边 E 为连接线，权重为线段长度。TCS 定义为 G 的代数连通度（Fiedler 特征值）与标准模板的比值。</p>
+<h4 id="323-效力场衰减曲线edc">3.2.3 效力场衰减曲线（EDC）</h4>
+<p>将生成魔法阵置于可控环境中（温度 22°C，相对湿度 45%，光通量 120 lux），通过场效应传感器（Field Effect Sensor v3）连续记录 72 小时内的超自然力波动，绘制衰减曲线。曲线下面积（Area Under Curve, AUC）即为该阵的总效力量。</p>
+<h3 id="33-对照组设置">3.3 对照组设置</h3>
+<p>设立一个手工绘制对照组，由三名具有 10 年以上执业经验的注册法师（Registered Practitioner of Arcane Arts, RPAA）分别独立绘制同规格标准五芒星阵。</p>
+<h2 id="4-结果与分析">4. 结果与分析</h2>
+<h3 id="41-gic-分数">4.1 GIC 分数</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模型</th><th>提示等级</th><th>GIC 分数</th><th>标准误</th></tr></thead><tbody><tr><td>ChatGPT</td><td>L1</td><td>0.512</td><td>±0.084</td></tr><tr><td>ChatGPT</td><td>L2</td><td>0.781</td><td>±0.043</td></tr><tr><td>ChatGPT</td><td>L3</td><td>0.894</td><td>±0.021</td></tr><tr><td>Claude</td><td>L1</td><td>0.498</td><td>±0.091</td></tr><tr><td>Claude</td><td>L2</td><td>0.769</td><td>±0.047</td></tr><tr><td>Claude</td><td>L3</td><td>0.887</td><td>±0.019</td></tr><tr><td>Gemini</td><td>L1</td><td>0.534</td><td>±0.079</td></tr><tr><td>Gemini</td><td>L3</td><td>0.891</td><td>±0.022</td></tr><tr><td>DeepSeek</td><td>L3</td><td>0.903</td><td>±0.018</td></tr><tr><td>SDXL</td><td>L1</td><td>0.287</td><td>±0.156</td></tr><tr><td>SDXL</td><td>L3</td><td>0.712</td><td>±0.061</td></tr><tr><td>DALL·E 3</td><td>L3</td><td>0.745</td><td>±0.058</td></tr><tr><td>手工绘制</td><td>—</td><td>0.967</td><td>±0.012</td></tr></tbody></table>
+<p>自回归语言模型在 L3 提示下均能达到 0.88 以上的 GIC，其中 DeepSeek V4 的表现最佳（0.903）。扩散模型（SDXL、DALL·E 3）的 GIC 显著低于自回归 LM（p &#x3C; 0.01），主要原因是去噪过程中的符号退化效应。值得注意的是，L3 提示对扩散模型的改善幅度（+148%）远超自回归 LM（+56%–78%），表明扩散模型对提示质量的敏感性更高。</p>
+<h3 id="42-tcs-分数">4.2 TCS 分数</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模型</th><th>提示等级</th><th>TCS</th><th>说明</th></tr></thead><tbody><tr><td>ChatGPT</td><td>L3</td><td>0.912</td><td>接近手工水平</td></tr><tr><td>Claude</td><td>L3</td><td>0.904</td><td>—</td></tr><tr><td>Gemini</td><td>L3</td><td>0.907</td><td>—</td></tr><tr><td>DeepSeek</td><td>L3</td><td>0.921</td><td>最佳</td></tr><tr><td>DALL·E 3</td><td>L3</td><td>0.782</td><td>有明显断点</td></tr><tr><td>手工绘制</td><td>—</td><td>0.984</td><td>—</td></tr></tbody></table>
+<p>拓扑连通性的核心挑战在于「非连续符文绘制」——即一条看似连通的线条在 AI 生成过程中可能被分割为多个不连续段。DeepSeek 在 L3 提示下生成的所有 50 个魔法阵样本中，仅有 2 个出现断点（发生率 4%），显著低于 DALL·E 3 的 38%。</p>
+<h3 id="43-edc-分析">4.3 EDC 分析</h3>
+<p>本研究的关键发现是：<strong>L3 提示下 AI 生成的魔法阵确实产生了可检测的超自然效力场</strong>。</p>
+<p>手工魔法阵的平均 AUC 为 847.2 ± 28.4（标准化单位，su），而 DeepSeek L3 为 622.1 ± 41.7 su，达到手工水平的 73.4%。衰减速率方面，手工阵在 72 小时内线性衰减至初始强度的 78.3%，而 AI 阵呈更快的指数衰减，在 36 小时内即降至半衰点，最终 72 小时残留为初始强度的 41.2%。</p>
+<p>进一步分析表明，衰减速率与 GIC 分数呈强负相关（r = -0.83），与 TCS 呈中等负相关（r = -0.61）。这说明符号完整性是效力持久性的主要预测因子。</p>
+<h3 id="44-意外发现过度完备现象">4.4 意外发现：过度完备现象</h3>
+<p>一个值得注意的反常结果是，Claude L3 在 3 个样本中出现了「过度完备」（Over-Completion）现象：魔法阵生成后在半径 2.3 米范围内引发了持续 47 分钟的异常温度下降（平均降幅 3.2°C），远超出五芒星阵的标准制冷效果（预期降幅 0.5°C）。对这些样本的几何分析发现，模型自发地在基础五芒星的外围添加了一组辅助符文，而这些符文属于已失传的毕达哥拉斯学派变体（Pythagorean Variant System）。该发现暗示，模型可能在训练语料中接触到了某些未被现代符文学文献收录的知识。</p>
+<h2 id="5-讨论">5. 讨论</h2>
+<h3 id="51-效力几何决定论">5.1 效力几何决定论</h3>
+<p>实验结果为「效力几何决定论」（EGD）提供了有力支持。按照 EGD 的观点，魔法阵的效力完全由几何属性决定——绘制者是否为人类、是否具有法力、是否怀着虔诚信念，在统计上不构成显著变量（p = 0.82）。这一结论对传统符文学构成了严重挑战，因为它意味着数千年来法师学徒的漫长训练在社会意义上固然重要，但在物理/超物理意义上并非必要。</p>
+<h3 id="52-提示工程作为新时代施法媒介">5.2 提示工程作为新时代施法媒介</h3>
+<p>L3 提示本质上是一种「语义法力注入」（Semantic Mana Injection, SMI）过程：法师不再直接绘制图形，而是通过自然语言精确描述其意图，由 AI 完成几何实现。这种间接施法方式在理论上降低了法力的生物学门槛，使不具备手工绘制能力（但具备语言表达能力）的个体也能参与到魔法阵的制备中。这对魔法教育的民主化具有深远意义。</p>
+<h3 id="53-局限性">5.3 局限性</h3>
+<p>本研究存在以下局限：</p>
+<ol>
+<li>
+<p><strong>样本量有限</strong>：每个模型 × 提示等级组合仅生成 50 个魔法阵，总计 650 个。建议后续研究将样本量扩大至 10,000 以上以获得更稳定的效应估计。</p>
+</li>
+<li>
+<p><strong>效力测量存在偏差</strong>：场效应传感器的标定标准（ISO 66666:2024）在本研究进行时尚处于草案阶段。</p>
+</li>
+<li>
+<p><strong>未考虑月亮周期</strong>：全部实验均在农历初七至初九期间进行。部分文献指出魔法阵效力在满月期间增强约 18%[8]，本研究的结果可能低估了真实效力水平。</p>
+</li>
+<li>
+<p><strong>伦理考量不足</strong>：当 Claude L3 触发了超出预期的制冷效应时，实验被迫暂停 47 分钟等待温度恢复，期间未建立正式的突发事件处理协议。</p>
+</li>
+</ol>
+<h2 id="6-结论">6. 结论</h2>
+<p>本文通过系统的对照实验，首次正面回答了「AI 生成的魔法阵能否正常使用」这一跨学科核心问题。答案是：</p>
+<p><strong>能，但需满足以下条件</strong>：</p>
+<ul>
+<li>使用自回归语言模型（而非扩散模型）进行生成；</li>
+<li>采用 L3 级别符文学增强提示；</li>
+<li>接受效力约为手工绘制的 73%，且持续时间约为手工的一半。</li>
+</ul>
+<p>这一结果表明，当前 AI 技术已经达到了实用魔法阵制备的门槛。考虑到 LLM 的迭代速度——按照 scaling law 预测，下一代模型将在 2027 年前后将 GIC 提升至 0.95 以上——我们有理由相信，<strong>AI 魔法阵将在未来 3–5 年内全面进入量产阶段</strong>，届时传统法师行业协会可能面临前所未有的存在危机。</p>
+<p>建议相关监管部门尽早制定 AI 魔法阵的效力认证标准与伦理使用规范。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>[1] Agrippa, H. C. <em>Three Books of Occult Philosophy</em>. 1531.</p>
+<p>[2] Rombach, R. et al. “High-Resolution Image Synthesis with Latent Diffusion Models.” <em>CVPR</em>, 2022.</p>
+<p>[3] Proctor, M. &#x26; Whitfield, T. “Ontological Displacement in Automated Glyphology.” <em>Journal of Computational Occultism</em>, 21(3): 45–67, 2025.</p>
+<p>[4] Crowley, A. (ed.). <em>The Lesser Key of Solomon: Goetia</em>. 1904.</p>
+<p>[5] Yamashiro, K. “Bio-Electric Encoding in Ritual Path Tracing: A Quantified Analysis.” <em>Kyoto Journal of Esoteric Engineering</em>, 18(2): 112–130, 2023.</p>
+<p>[6] Ho, J. et al. “Denoising Diffusion Probabilistic Models.” <em>NeurIPS</em>, 2020.</p>
+<p>[7] Zhou, L. et al. “Reinforcement Learning from Geometric Feedback for Constrained Symbol Generation.” <em>ICLR</em>, 2026.</p>
+<p>[8] Leclerc, A. &#x26; Nakamura, R. “Lunar Phase Modulation of Ritual Efficacy: A Meta-Analysis of 423 Studies.” <em>Nature Occult Science</em>, 12(1): 89–104, 2024.</p> </div> </article>  </div> </main> </div> <nav class="mobile-nav" aria-label="移动端导航"> <a href="/" class="mobile-nav-item " aria-label="首页"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"></path><path d="M9 21V13h6v8"></path> </svg>   <span>首页</span> </a><a href="/blog" class="mobile-nav-item active" aria-label="博客" aria-current="page">  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path> </svg>  <span>博客</span> </a><a href="/about" class="mobile-nav-item " aria-label="关于">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path> </svg> <span>关于</span> </a> <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换深色模式"> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path> </svg> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> </nav> <script type="module">localStorage.getItem("theme")!=="light"?document.documentElement.setAttribute("data-theme","dark"):document.documentElement.removeAttribute("data-theme");</script></body></html> <script type="module">document.querySelectorAll(".blog-post-content pre").forEach(e=>{const t=document.createElement("button");t.className="copy-btn",t.textContent="Copy",t.addEventListener("click",async()=>{const o=e.querySelector("code")?.textContent??"";await navigator.clipboard.writeText(o),t.textContent="Copied",t.classList.add("copied"),setTimeout(()=>{t.textContent="Copy",t.classList.remove("copied")},2e3)}),e.appendChild(t)});</script>
