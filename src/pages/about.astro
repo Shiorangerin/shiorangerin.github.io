@@ -1,35 +1,38 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import LiquidGlass from "../components/LiquidGlass.astro";
 ---
 
 <BaseLayout title="关于" description="关于 Shiorangerin">
   <section class="animate-in">
-    <div class="glass-card">
-      <h1>关于</h1>
+    <LiquidGlass borderRadius="22px">
+      <div class="glass-card">
+        <h1>关于</h1>
 
-      <div class="about-section">
-        <h2>我是谁</h2>
-        <p>
-          一个其实对于 Coding 一窍不通，正在高强度与 LLM 斗智斗勇的普通人。
-        </p>
-      </div>
+        <div class="about-section">
+          <h2>我是谁</h2>
+          <p>
+            一个其实对于 Coding 一窍不通，正在高强度与 LLM 斗智斗勇的普通人。
+          </p>
+        </div>
 
-      <div class="about-section">
-        <h2>关于本站</h2>
-        <p>
-          本站尚在建设中，但已可以初步使用。
-        </p>
-        <p>
-          基于 <a href="https://astro.build">Astro</a> 构建。
-        </p>
-      </div>
+        <div class="about-section">
+          <h2>关于本站</h2>
+          <p>
+            本站尚在建设中，但已可以初步使用。
+          </p>
+          <p>
+            基于 <a href="https://astro.build">Astro</a> 构建。
+          </p>
+        </div>
 
-      <div>
-        <h2>找到我</h2>
-        <p>
-          宇宙很大，生活更大，我们总会再次见面的。
-        </p>
+        <div>
+          <h2>找到我</h2>
+          <p>
+            宇宙很大，生活更大，我们总会再次见面的。
+          </p>
+        </div>
       </div>
-    </div>
+    </LiquidGlass>
   </section>
 </BaseLayout>

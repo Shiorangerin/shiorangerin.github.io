@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import LiquidGlass from "./LiquidGlass.astro";
 
 interface Props {
   post: CollectionEntry<"blog">;
@@ -11,17 +12,19 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 400));
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
-<a href={base + "blog/" + post.id.replace(/\.md$/, "")} class="blog-card animate-in">
-  <div class="accent-line"></div>
-  <time class="blog-card-date" datetime={date.toISOString()}>
-    {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
-  </time>
-  <h3 class="blog-card-title">{title}</h3>
-  <p class="blog-card-desc">{description}</p>
-  <div class="blog-card-meta">
-    <span>阅读约 {readingTime} 分钟</span>
-    {tags.length > 0 && (
-      <span>{tags.slice(0, 3).map((t) => `#${t}`).join(" ")}</span>
-    )}
-  </div>
-</a>
+<LiquidGlass borderRadius="22px">
+  <a href={base + "blog/" + post.id.replace(/\.md$/, "")} class="blog-card animate-in">
+    <div class="accent-line"></div>
+    <time class="blog-card-date" datetime={date.toISOString()}>
+      {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+    </time>
+    <h3 class="blog-card-title">{title}</h3>
+    <p class="blog-card-desc">{description}</p>
+    <div class="blog-card-meta">
+      <span>阅读约 {readingTime} 分钟</span>
+      {tags.length > 0 && (
+        <span>{tags.slice(0, 3).map((t) => `#${t}`).join(" ")}</span>
+      )}
+    </div>
+  </a>
+</LiquidGlass>
