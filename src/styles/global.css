@@ -575,7 +575,7 @@ a:hover { color: var(--accent-hover); }
 .exit-overlay--show { opacity: 1; pointer-events: auto; }
 
 .exit-dialog {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border-radius: var(--radius-xl);
@@ -586,7 +586,7 @@ a:hover { color: var(--accent-hover); }
   overflow: hidden;
 }
 [data-theme="dark"] .exit-dialog {
-  background: rgba(36, 36, 38, 0.7);
+  background: rgba(36, 36, 38, 0.74);
 }
 
 .exit-titlebar {
