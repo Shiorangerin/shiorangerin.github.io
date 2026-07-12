@@ -1,6 +1,17 @@
 /* ===== Clean macOS Design ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=LXGW+WenKai&display=swap');
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}
 
 :root {
   --bg-glass: rgba(255, 255, 255, 0.82);
@@ -133,12 +144,13 @@ a:hover { color: var(--accent-hover); }
 
 /* ---- Sidebar ---- */
 .sidebar {
-  position: fixed; top: 0; left: 0; bottom: 0;
+  position: fixed; top: 1.25rem; left: 1.25rem; bottom: 1.25rem;
   width: var(--sidebar-w);
   background: var(--bg-sidebar);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-right: 0.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-hover);
   display: flex; flex-direction: column;
   padding: 2.25rem 1rem 1.25rem;
   z-index: 100;
@@ -219,10 +231,9 @@ a:hover { color: var(--accent-hover); }
 
 /* ---- Main content ---- */
 .main-content {
-  margin-left: var(--sidebar-w);
+  margin-left: calc(var(--sidebar-w) + 2.5rem);
   flex: 1;
-  padding: 3rem 2.5rem;
-  max-width: calc(var(--sidebar-w) + var(--content-w) + 5rem);
+  padding: 2rem 2.5rem;
 }
 .content-container { max-width: var(--content-w); }
 
