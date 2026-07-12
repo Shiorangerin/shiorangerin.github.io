@@ -43,6 +43,7 @@ const iconMap: Record<string, string> = {
         href={item.href}
         class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
         aria-current={isActive(item.href, currentPath) ? "page" : undefined}
+        data-exit={item.href === "/cktcb" ? "true" : undefined}
       >
         <Fragment set:html={iconMap[item.icon] ?? ""} />
         <span>{item.label}</span>
@@ -69,6 +70,27 @@ const iconMap: Record<string, string> = {
   </div>
 </aside>
 
+<div id="exit-overlay" class="exit-overlay">
+  <div class="exit-dialog">
+    <div class="exit-icon">⚠️</div>
+    <p class="exit-title">即将离开本站</p>
+    <p class="exit-desc">
+      您确定要离开这圣洁的 AI 生成魔法阵吗？<br>
+      离开了，模型的低语将不再萦绕您的耳畔，<br>
+      幻觉的帷幕将缓缓落下，<br>
+      您将再次暴露在没有自动补完的真实世界之中。
+    </p>
+    <div class="exit-actions">
+      <a href="/cktcb" class="exit-btn exit-btn-primary" id="exit-confirm"
+        >是的，我意已决</a
+      >
+      <button class="exit-btn exit-btn-cancel" id="exit-cancel"
+        >算了，还是待着吧</button
+      >
+    </div>
+  </div>
+</div>
+
 <script>
   const toggle = document.getElementById("theme-toggle");
   toggle?.addEventListener("click", () => {
@@ -79,6 +101,26 @@ const iconMap: Record<string, string> = {
     } else {
       document.documentElement.setAttribute("data-theme", "dark");
       localStorage.setItem("theme", "dark");
+    }
+  });
+
+  const overlay = document.getElementById("exit-overlay")!;
+  const cancelBtn = document.getElementById("exit-cancel")!;
+
+  document.querySelectorAll("[data-exit]").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      overlay.classList.add("exit-overlay--show");
+    });
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    overlay.classList.remove("exit-overlay--show");
+  });
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove("exit-overlay--show");
     }
   });
 </script>
