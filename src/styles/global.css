@@ -483,6 +483,52 @@ a:hover { color: var(--accent-hover); }
 
 .empty-state { text-align: center; padding: 2.5rem 2rem; color: var(--text-tertiary); font-size: 0.9rem; }
 
+/* ---- View all card ---- */
+.view-all-card {
+  display: flex; align-items: center; justify-content: space-between;
+  text-decoration: none; color: inherit;
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 0.75rem;
+  transition: all var(--dur-normal) var(--spring);
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.view-all-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.view-all-card .accent-line {
+  position: absolute; left: 0; top: 20%; bottom: 20%; width: 3px;
+  border-radius: 0 2px 2px 0; background: transparent;
+  transition: background var(--dur-normal) var(--ease-out); z-index: 1;
+}
+.view-all-card:hover .accent-line { background: var(--accent); }
+
+.view-all-card-label {
+  font-size: 1rem; font-weight: 600; color: var(--text-primary);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.view-all-card-count {
+  font-size: 0.78rem; font-weight: 450; color: var(--text-tertiary);
+  background: var(--bg-subtle); padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.view-all-card-action {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.88rem; font-weight: 500; color: var(--accent);
+  transition: transform var(--dur-normal) var(--spring);
+}
+.view-all-card:hover .view-all-card-action { transform: translateX(4px); }
+.view-all-card-action svg {
+  width: 18px; height: 18px;
+  transition: transform var(--dur-normal) var(--spring);
+}
+.view-all-card:hover .view-all-card-action svg { transform: translateX(3px); }
+
 /* ===== Animations ===== */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
@@ -493,6 +539,7 @@ a:hover { color: var(--accent-hover); }
 .stagger-2 { animation-delay: 80ms; }
 .stagger-3 { animation-delay: 120ms; }
 .stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }

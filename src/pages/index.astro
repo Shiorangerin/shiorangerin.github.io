@@ -50,8 +50,19 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
       )
     }
     {recentPosts.length > 0 && (
-      <a href={base + "blog"}>
-        查看全部 &rarr;
+      <a href={base + "blog"} class="view-all-card animate-in stagger-5">
+        <div class="accent-line"></div>
+        <span class="view-all-card-label">
+          浏览全部文章
+          <span class="view-all-card-count">{recentPosts.length} 篇近期</span>
+        </span>
+        <span class="view-all-card-action">
+          全部文章
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </span>
       </a>
     )}
   </section>
