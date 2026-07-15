@@ -24,7 +24,7 @@ const mobileNav = [
   { href: base, label: "首页", icon: "house" },
   { href: base + "blog", label: "默想", icon: "pen" },
   { href: base + "about", label: "读经", icon: "person" },
-  { href: "/cktcb", label: "汤汤", icon: "heart", exit: true },
+  { href: base + "links", label: "其他", icon: "link" },
 ];
 ---
 
@@ -81,7 +81,6 @@ const mobileNav = [
           class={`mobile-nav-item ${isActive(item.href, currentPath) ? "active" : ""}`}
           aria-label={item.label}
           aria-current={isActive(item.href, currentPath) ? "page" : undefined}
-          data-exit={item.exit ? "true" : undefined}
         >
           {item.icon === "house" && (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -98,9 +97,9 @@ const mobileNav = [
               <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
             </svg>
           )}
-          {item.icon === "heart" && (
+          {item.icon === "link" && (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
             </svg>
           )}
           <span>{item.label}</span>
