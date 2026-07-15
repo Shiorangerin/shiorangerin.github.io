@@ -10,8 +10,7 @@ const navItems = [
   { href: base, label: "首页", icon: "house" },
   { href: base + "blog", label: "默想", icon: "pen" },
   { href: base + "about", label: "读经", icon: "person" },
-  { href: "/cktcb", label: "汤汤", icon: "heart" },
-  { href: "/EFSC", label: "EFSC", icon: "link" },
+  { href: base + "links", label: "其他链接", icon: "link" },
 ];
 
 function isActive(href: string, path: string) {
@@ -23,7 +22,6 @@ const iconMap: Record<string, string> = {
   house: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/></svg>`,
   pen: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
   person: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>`,
-  heart: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
   link: `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
 };
 ---
@@ -45,7 +43,6 @@ const iconMap: Record<string, string> = {
         href={item.href}
         class={`sidebar-link ${isActive(item.href, currentPath) ? "active" : ""}`}
         aria-current={isActive(item.href, currentPath) ? "page" : undefined}
-        data-exit={item.href === "/cktcb" ? "true" : undefined}
       >
         <Fragment set:html={iconMap[item.icon] ?? ""} />
         <span>{item.label}</span>
@@ -72,36 +69,6 @@ const iconMap: Record<string, string> = {
   </div>
 </aside>
 
-<div id="exit-overlay" class="exit-overlay">
-  <div class="exit-dialog">
-    <div class="exit-titlebar">
-      <div class="exit-traffic">
-        <span class="exit-dot exit-dot--red"></span>
-        <span class="exit-dot exit-dot--yellow"></span>
-        <span class="exit-dot exit-dot--green"></span>
-      </div>
-      <span class="exit-title">确认离开</span>
-    </div>
-    <div class="exit-body">
-      <div class="exit-icon">✝️</div>
-      <p class="exit-desc">
-        您即将前往一个外部页面。<br>
-        愿主的平安与您同行，<br>
-        无论您去往何方，<br>
-        祂的恩典永不离开。
-      </p>
-      <div class="exit-actions">
-        <button class="exit-btn exit-btn-cancel" id="exit-cancel"
-          >留在此地</button
-        >
-        <a href="/cktcb" class="exit-btn exit-btn-primary" id="exit-confirm"
-          >继续前往</a
-        >
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
   const toggle = document.getElementById("theme-toggle");
   toggle?.addEventListener("click", () => {
@@ -112,26 +79,6 @@ const iconMap: Record<string, string> = {
     } else {
       document.documentElement.setAttribute("data-theme", "dark");
       localStorage.setItem("theme", "dark");
-    }
-  });
-
-  const overlay = document.getElementById("exit-overlay")!;
-  const cancelBtn = document.getElementById("exit-cancel")!;
-
-  document.querySelectorAll("[data-exit]").forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      overlay.classList.add("exit-overlay--show");
-    });
-  });
-
-  cancelBtn.addEventListener("click", () => {
-    overlay.classList.remove("exit-overlay--show");
-  });
-
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-      overlay.classList.remove("exit-overlay--show");
     }
   });
 </script>
