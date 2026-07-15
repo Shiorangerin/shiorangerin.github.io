@@ -6,8 +6,8 @@ export async function GET(context) {
   posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
-    title: "Shiorangerin Blog",
-    description: "Thoughts on software, design, and macOS development.",
+    title: "Shiorangerin 默想",
+    description: "信仰、技术与生活的默想记录。",
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,

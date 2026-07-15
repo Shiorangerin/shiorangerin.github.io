@@ -8,7 +8,7 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
 const navItems = [
   { href: base, label: "首页", icon: "house" },
-  { href: base + "blog", label: "博客", icon: "pen" },
+  { href: base + "blog", label: "默想", icon: "pen" },
   { href: base + "about", label: "关于", icon: "person" },
   { href: "/cktcb", label: "汤汤", icon: "heart" },
 ];
@@ -52,12 +52,12 @@ const iconMap: Record<string, string> = {
   </nav>
 
   <div class="sidebar-footer">
-    <span class="theme-label">外观</span>
+    <span class="theme-label">明暗</span>
     <button
       id="theme-toggle"
       class="theme-toggle"
-      aria-label="切换深色模式"
-      title="切换深色模式"
+      aria-label="切换明暗模式"
+      title="切换明暗模式"
     >
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="5"/>
@@ -78,22 +78,22 @@ const iconMap: Record<string, string> = {
         <span class="exit-dot exit-dot--yellow"></span>
         <span class="exit-dot exit-dot--green"></span>
       </div>
-      <span class="exit-title">离开确认</span>
+      <span class="exit-title">确认离开</span>
     </div>
     <div class="exit-body">
-      <div class="exit-icon">⚠️</div>
+      <div class="exit-icon">✝️</div>
       <p class="exit-desc">
-        您确定要离开这圣洁的 AI 生成魔法阵吗？<br>
-        离开了，模型的低语将不再萦绕您的耳畔，<br>
-        幻觉的帷幕将缓缓落下，<br>
-        您将再次暴露在没有自动补完的真实世界之中。
+        您即将前往一个外部页面。<br>
+        愿主的平安与您同行，<br>
+        无论您去往何方，<br>
+        祂的恩典永不离开。
       </p>
       <div class="exit-actions">
         <button class="exit-btn exit-btn-cancel" id="exit-cancel"
-          >算了，还是待着吧</button
+          >留在此地</button
         >
         <a href="/cktcb" class="exit-btn exit-btn-primary" id="exit-confirm"
-          >是的，我意已决</a
+          >继续前往</a
         >
       </div>
     </div>

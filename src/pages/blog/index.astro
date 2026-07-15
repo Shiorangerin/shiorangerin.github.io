@@ -9,12 +9,12 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
-<BaseLayout title="博客" description="一些杂谈和碎碎念。">
+<BaseLayout title="默想" description="信仰、技术与生活的默想记录。">
   <section class="animate-in">
     <div class="glass-card">
-      <h1>博客</h1>
+      <h1>默想</h1>
       <p>
-        一些杂谈和碎碎念。
+        信仰、技术与生活的默想记录。
       </p>
       <div class="tags">
         <a href={base + "rss.xml"} class="rss-link">
@@ -28,13 +28,13 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
   </section>
 
   <section style="margin-top: 1.5rem;">
-    <SearchBar placeholder="搜索文章…" />
+    <SearchBar placeholder="搜索默想…" />
     <div id="blog-list">
       {
         posts.length === 0 ? (
           <div class="glass-card animate-in">
             <p style="text-align: center; color: var(--text-tertiary); margin: 0;">
-              暂无文章，稍后再来看看。
+              暂无默想，稍后再来看看。
             </p>
           </div>
         ) : (

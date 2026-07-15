@@ -1,1 +1,1 @@
-## The website is all AIGC !
+## Shiorangerin 的个人站点 —— 信仰、技术与生活的默想

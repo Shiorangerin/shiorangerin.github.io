@@ -11,7 +11,7 @@ interface Props {
 const { title, description, ogImage } = Astro.props;
 const siteTitle = "Shiorangerin";
 const fullTitle = title === "首页" ? siteTitle : `${title} — ${siteTitle}`;
-const desc = description ?? "Shiorangerin 的个人站点。";
+const desc = description ?? "Shiorangerin 的个人站点 —— 信仰、技术与生活。";
 const currentPath = Astro.url.pathname;
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
@@ -22,7 +22,7 @@ function isActive(href: string, path: string) {
 
 const mobileNav = [
   { href: base, label: "首页", icon: "house" },
-  { href: base + "blog", label: "博客", icon: "pen" },
+  { href: base + "blog", label: "默想", icon: "pen" },
   { href: base + "about", label: "关于", icon: "person" },
   { href: "/cktcb", label: "汤汤", icon: "heart", exit: true },
 ];
@@ -46,14 +46,14 @@ const mobileNav = [
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@shiorangerin" />
     <meta name="twitter:creator" content="@shiorangerin" />
-    <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f0e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/png" href={base + "favicon.png"} />
     <link rel="apple-touch-icon" href={base + "apple-touch-icon.png"} />
-    <link rel="alternate" type="application/rss+xml" title="Shiorangerin 博客" href={base + "rss.xml"} />
+    <link rel="alternate" type="application/rss+xml" title="Shiorangerin 默想" href={base + "rss.xml"} />
   </head>
   <body style={`background-image: url(${base}wallpaper.webp)`}>
-    <a href="#main-content" class="skip-link">跳到主要内容</a>
+    <a href="#main-content" class="skip-link">跳到主内容</a>
     <script>
       (() => {
         const stored = localStorage.getItem("theme");
@@ -74,7 +74,7 @@ const mobileNav = [
       </main>
     </div>
 
-    <nav class="mobile-nav" aria-label="移动端导航">
+    <nav class="mobile-nav" aria-label="移动导航">
       {mobileNav.map((item) => (
         <a
           href={item.href}
@@ -106,7 +106,7 @@ const mobileNav = [
           <span>{item.label}</span>
         </a>
       ))}
-      <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换深色模式">
+      <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换明暗模式">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
         </svg>
