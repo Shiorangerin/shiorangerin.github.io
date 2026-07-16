@@ -50,7 +50,6 @@ dist/
 
 # Local-only agent instructions
 AGENT.md
-AGENTS.md
 
 # HEIC wallpaper source (keep the PNG)
 public/wallpaper.heic
