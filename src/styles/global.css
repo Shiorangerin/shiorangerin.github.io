@@ -716,3 +716,62 @@ a:hover { color: var(--accent-hover); }
   border: 0.5px solid var(--border);
 }
 .exit-btn-cancel:hover { background: var(--accent-bg); color: var(--accent); }
+
+/* ===== Bible Verse Tooltip ===== */
+.bible-verse {
+  cursor: help;
+  position: relative;
+  border-bottom: 1px dotted var(--accent);
+  transition: border-color var(--dur-normal) var(--ease-out), text-shadow var(--dur-normal) var(--ease-out);
+}
+
+.bible-verse:hover {
+  border-bottom-color: var(--accent);
+  border-bottom-style: solid;
+  text-shadow: 0 0 8px var(--accent-bg);
+}
+
+.bible-verse::after {
+  content: attr(data-ref);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--bg-elevated);
+  color: var(--accent);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--spring);
+  border: 0.5px solid var(--border);
+  box-shadow: var(--shadow-hover);
+  z-index: 20;
+  letter-spacing: 0.02em;
+}
+
+.bible-verse::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--bg-elevated);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--spring);
+  z-index: 21;
+}
+
+.bible-verse:hover::after,
+.bible-verse:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
