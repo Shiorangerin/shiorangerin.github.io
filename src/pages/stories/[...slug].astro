@@ -1,0 +1,72 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("stories", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, "") },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"stories">;
+}
+
+const { post } = Astro.props;
+const { title, description, date, updated, tags } = post.data;
+const { Content } = await post.render();
+const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="blog-post animate-in">
+    <header class="blog-post-header">
+      <h1 class="blog-post-title">{title}</h1>
+      <div class="blog-post-meta">
+        <time datetime={date.toISOString()}>
+          {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+        </time>
+        {updated && (
+          <span>
+            Updated{" "}
+            <time datetime={updated.toISOString()}>
+              {updated.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" })}
+            </time>
+          </span>
+        )}
+        <span>{readingTime} 分钟阅读</span>
+      </div>
+      {tags.length > 0 && (
+        <div class="tags" style="margin-top: 1rem;">
+          {tags.map((tag) => <span class="tag">#{tag}</span>)}
+        </div>
+      )}
+    </header>
+
+    <div class="blog-post-content">
+      <Content />
+    </div>
+  </article>
+
+</BaseLayout>
+
+<script>
+  document.querySelectorAll(".blog-post-content pre").forEach((pre) => {
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.textContent = "复制";
+    btn.addEventListener("click", async () => {
+      const code = pre.querySelector("code")?.textContent ?? "";
+      await navigator.clipboard.writeText(code);
+      btn.textContent = "已复制";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "复制";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
+    pre.appendChild(btn);
+  });
+</script>

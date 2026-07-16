@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import SearchBar from "../../components/SearchBar.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("stories", ({ data }) => !data.draft);
+const pinned = posts.filter((p) => p.data.pinned).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const unpinned = posts.filter((p) => !p.data.pinned).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sorted = [...pinned, ...unpinned];
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
+---
+
+<BaseLayout title="故事" description="Shiorangerin 的 OC 故事集。">
+  <section class="animate-in">
+    <div class="glass-card">
+      <h1>故事</h1>
+      <p>
+        OC 故事集，原创角色与世界观创作记录。
+      </p>
+      <div class="tags">
+        <a href={base + "rss.xml"} class="rss-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
+          </svg>
+          RSS
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top: 1.5rem;">
+    <SearchBar placeholder="搜索故事…" />
+    <div id="blog-list">
+      {
+          sorted.length === 0 ? (
+          <div class="glass-card animate-in">
+            <p style="text-align: center; color: var(--text-tertiary); margin: 0;">
+              暂无故事，稍后再来看看。
+            </p>
+          </div>
+        ) : (
+          sorted.map((post, i) => (
+            <div class={`animate-in stagger-${Math.min(i + 1, 4)}`}>
+              <BlogCard post={post} collection="stories" />
+            </div>
+          ))
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import Fuse from "fuse.js";
+
+  const searchInput = document.getElementById("blog-search") as HTMLInputElement | null;
+  if (searchInput) {
+    const cards = document.querySelectorAll<HTMLElement>("#blog-list > div");
+    const data = Array.from(cards).map((el) => ({
+      el,
+      title: el.querySelector(".blog-card-title")?.textContent ?? "",
+      desc: el.querySelector(".blog-card-desc")?.textContent ?? "",
+      meta: el.querySelector(".blog-card-meta")?.textContent ?? "",
+    }));
+
+    const fuse = new Fuse(data, {
+      keys: ["title", "desc", "meta"],
+      threshold: 0.35,
+    });
+
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.trim();
+      if (!q) {
+        cards.forEach((c) => { c.style.display = ""; });
+        return;
+      }
+      const results = new Set(fuse.search(q).map((r) => r.item.el));
+      cards.forEach((c) => {
+        c.style.display = results.has(c as HTMLElement) ? "" : "none";
+      });
+    });
+  }
+</script>

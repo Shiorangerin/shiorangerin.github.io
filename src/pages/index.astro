@@ -5,7 +5,13 @@ import { getCollection } from "astro:content";
 
 const recentPosts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 4);
+  .slice(0, 3);
+const recentStories = (await getCollection("stories", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+const allRecent = [...recentPosts, ...recentStories]
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
@@ -37,19 +43,19 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
    <section>
      {
-      recentPosts.length === 0 ? (
+      allRecent.length === 0 ? (
         <div class="glass-card empty-state">
-          <p>暂无默想，稍后再来看看。</p>
+          <p>暂无内容，稍后再来看看。</p>
         </div>
       ) : (
-        recentPosts.map((post, i) => (
+        allRecent.map((post, i) => (
           <div class={`animate-in stagger-${Math.min(i + 1, 4)}`}>
-            <BlogCard post={post} />
+            <BlogCard post={post} collection={post.collection} />
           </div>
         ))
       )
     }
-    {recentPosts.length > 0 && (
+    {allRecent.length > 0 && (
       <a href={base + "blog"} class="view-all-card animate-in stagger-5">
         <div class="accent-line"></div>
         <span class="view-all-card-label">
