@@ -6,14 +6,30 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogType?: string;
+  articleDate?: string;
+  articleUpdated?: string;
+  articleTags?: string[];
+  noindex?: boolean;
 }
 
-const { title, description, ogImage } = Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  ogType = "website",
+  articleDate,
+  articleUpdated,
+  articleTags = [],
+  noindex,
+} = Astro.props;
 const siteTitle = "Shiorangerin";
+const siteUrl = "https://shiorangerin.github.io";
 const fullTitle = title === "首页" ? siteTitle : `${title} — ${siteTitle}`;
 const desc = description ?? "Shiorangerin 的个人站点 —— 信仰、技术与生活。";
 const currentPath = Astro.url.pathname;
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
+const defaultOgImage = siteUrl + base.replace(/\/$/, "") + "/avatar.jpg";
 
 function isActive(href: string, path: string) {
   if (href === base || href === base.slice(0, -1)) return path === "/" || path === "";
@@ -27,6 +43,35 @@ const mobileNav = [
   { href: base + "about", label: "读经", icon: "person" },
   { href: base + "links", label: "其他", icon: "link" },
 ];
+
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage ? (ogImage.startsWith("http") ? ogImage : siteUrl + (ogImage.startsWith("/") ? ogImage : "/" + ogImage)) : defaultOgImage;
+
+const jsonLd: Record<string, unknown>[] = [];
+if (articleDate && ogType === "article") {
+  jsonLd.push({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: desc,
+    datePublished: articleDate,
+    ...(articleUpdated ? { dateModified: articleUpdated } : {}),
+    author: { "@type": "Person", "name": "Shiorangerin", "url": siteUrl },
+    url: canonical,
+  });
+  const collection = currentPath.startsWith("/blog") ? "默想" : currentPath.startsWith("/stories") ? "故事" : "";
+  if (collection) {
+    jsonLd.push({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "首页", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: collection, item: siteUrl + "/" + (currentPath.startsWith("/blog") ? "blog" : "stories") },
+        { "@type": "ListItem", position: 3, name: title },
+      ],
+    });
+  }
+}
 ---
 
 <!doctype html>
@@ -35,23 +80,38 @@ const mobileNav = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
-    <link rel="canonical" href={Astro.url.href} />
+    <link rel="canonical" href={canonical} />
     <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex" />}
+
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
-    <meta property="og:type" content="website" />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="Shiorangerin" />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@shiorangerin" />
     <meta name="twitter:creator" content="@shiorangerin" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {articleDate && <meta property="article:published_time" content={articleDate} />}
+    {articleUpdated && <meta property="article:modified_time" content={articleUpdated} />}
+    {articleTags.map((tag) => <meta property="article:tag" content={tag} />)}
+
     <meta name="theme-color" content="#f5f0e8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/png" href={base + "favicon.png"} />
     <link rel="apple-touch-icon" href={base + "apple-touch-icon.png"} />
     <link rel="alternate" type="application/rss+xml" title="Shiorangerin 默想" href={base + "rss.xml"} />
+
+    {jsonLd.map((ld) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
+    ))}
   </head>
   <body style={`background-image: url(${base}wallpaper.webp)`}>
     <a href="#main-content" class="skip-link">跳到主内容</a>

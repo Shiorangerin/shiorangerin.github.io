@@ -15,12 +15,12 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, date, updated, tags } = post.data;
+const { title, description, date, updated, tags, cover } = post.data;
 const { Content } = await post.render();
 const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogImage={cover} ogType="article" articleDate={date.toISOString()} articleUpdated={updated?.toISOString()} articleTags={tags}>
   <article class="blog-post animate-in">
     <header class="blog-post-header">
       <h1 class="blog-post-title">{title}</h1>

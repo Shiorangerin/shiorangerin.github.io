@@ -14,6 +14,8 @@ export async function GET(context) {
       description: post.data.description,
       pubDate: post.data.date,
       link: `/${post.collection}/${post.id.replace(/\.md$/, "")}`,
+      categories: post.data.tags,
+      author: "Shiorangerin",
     }));
 
   return rss({
