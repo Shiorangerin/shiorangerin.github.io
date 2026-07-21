@@ -240,7 +240,7 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-tertiary); transition: all var(--dur-fast) var(--ease-out);
 }
 .sidebar-social:hover { background: var(--bg-subtle); color: var(--text-primary); }
-.sidebar-social svg { width: 15px; height: 15px; }
+.sidebar-social svg, .sidebar-social i { width: 15px; height: 15px; font-size: 14px; line-height: 1; }
 
 .sidebar-footer {
   display: flex; align-items: center; justify-content: space-between;

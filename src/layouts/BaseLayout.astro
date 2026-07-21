@@ -110,6 +110,7 @@ if (articleDate && ogType === "article") {
     <link rel="icon" type="image/png" href={base + "favicon.png"} />
     <link rel="apple-touch-icon" href={base + "apple-touch-icon.png"} />
     <link rel="alternate" type="application/rss+xml" title="Shiorangerin 默想" href={base + "rss.xml"} />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     {jsonLd.map((ld) => (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
