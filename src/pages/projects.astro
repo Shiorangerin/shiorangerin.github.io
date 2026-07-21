@@ -1,0 +1,195 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Repo {
+  id: number;
+  name: string;
+  full_name: string;
+  html_url: string;
+  description: string | null;
+  language: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  updated_at: string;
+  homepage: string | null;
+  topics: string[];
+  fork: boolean;
+  archived: boolean;
+}
+
+let repos: Repo[] = [];
+let error: string | null = null;
+
+try {
+  const res = await fetch(
+    "https://api.github.com/users/Shiorangerin/repos?sort=stars&direction=desc&per_page=100&type=owner",
+    { headers: { Accept: "application/vnd.github.v3+json" } }
+  );
+  if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+  repos = (await res.json()) as Repo[];
+} catch (e) {
+  error = e instanceof Error ? e.message : "获取项目列表失败";
+}
+
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
+const langColors: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f1e05a",
+  Python: "#3572A5",
+  Go: "#00ADD8",
+  Rust: "#dea584",
+  Swift: "#F05138",
+  Kotlin: "#A97BFF",
+  Java: "#b07219",
+  "C++": "#f34b7d",
+  C: "#555555",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  Shell: "#89e051",
+  Ruby: "#701516",
+  PHP: "#4F5D95",
+  Vue: "#41b883",
+  Astro: "#FF5A03",
+  MDX: "#1B1F24",
+};
+---
+
+<BaseLayout title="项目" description="GitHub 开源项目">
+  <section class="animate-in">
+    <div class="glass-card">
+      <h1>项目</h1>
+      <p>GitHub 上的一些开源项目，按 Star 数排序。</p>
+    </div>
+  </section>
+
+  <section style="margin-top: 1.5rem;">
+    {
+      error ? (
+        <div class="glass-card animate-in">
+          <p>暂时无法加载项目列表：{error}</p>
+        </div>
+      ) : repos.length === 0 ? (
+        <div class="glass-card animate-in">
+          <p>暂无公开项目。</p>
+        </div>
+      ) : (
+        repos.filter((r) => !r.fork || r.stargazers_count > 0).map((repo) => (
+          <div class="glass-card animate-in repo-card" style="margin-bottom: 1rem;">
+            <div class="repo-header">
+              <a href={repo.html_url} class="repo-name" target="_blank" rel="noopener noreferrer">
+                <svg class="repo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                </svg>
+                {repo.name}
+              </a>
+              <div class="repo-meta">
+                <span class="repo-stars">
+                  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="14" height="14">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {repo.stargazers_count}
+                </span>
+                {repo.language && (
+                  <span class="repo-lang">
+                    <span class="lang-dot" style={`background-color: ${langColors[repo.language] ?? "#8b8b8b"}`} />
+                    {repo.language}
+                  </span>
+                )}
+                <span class="repo-updated">{formatDate(repo.updated_at)}</span>
+              </div>
+            </div>
+            {repo.description && <p class="repo-desc">{repo.description}</p>}
+            {repo.homepage && (
+              <a href={repo.homepage} class="repo-homepage" target="_blank" rel="noopener noreferrer">
+                {repo.homepage.replace(/^https?:\/\//, "")}
+              </a>
+            )}
+          </div>
+        ))
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .repo-card {
+    padding: 1rem 1.25rem;
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .repo-card:hover {
+    transform: translateY(-1px);
+  }
+  .repo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .repo-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .repo-name:hover {
+    text-decoration: underline;
+  }
+  .repo-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  .repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+  }
+  .repo-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--text-secondary);
+  }
+  .repo-lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .lang-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .repo-updated {
+    white-space: nowrap;
+  }
+  .repo-desc {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .repo-homepage {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .repo-homepage:hover {
+    color: var(--accent);
+  }
+</style>
