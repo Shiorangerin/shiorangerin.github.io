@@ -58,6 +58,11 @@ const langColors: Record<string, string> = {
   Astro: "#FF5A03",
   MDX: "#1B1F24",
 };
+
+const repoDescFallback: Record<string, string> = {
+  "homebrew-apps": "个人 Homebrew Tap，管理自定义 formulae 和 casks。",
+  "md2pic": "将 Markdown 文件一键渲染为图片的工具。",
+};
 ---
 
 <BaseLayout title="项目" description="GitHub 开源项目">
@@ -105,6 +110,9 @@ const langColors: Record<string, string> = {
               </div>
             </div>
             {repo.description && <p class="repo-desc">{repo.description}</p>}
+            {!repo.description && (
+              <p class="repo-desc no-desc">{repoDescFallback[repo.name] ?? "此项目暂无简介。"}</p>
+            )}
             {repo.homepage && (
               <a href={repo.homepage} class="repo-homepage" target="_blank" rel="noopener noreferrer">
                 {repo.homepage.replace(/^https?:\/\//, "")}
@@ -182,6 +190,10 @@ const langColors: Record<string, string> = {
     font-size: 0.9rem;
     color: var(--text-secondary);
     line-height: 1.5;
+  }
+  .no-desc {
+    font-style: italic;
+    color: var(--text-tertiary);
   }
   .repo-homepage {
     display: inline-block;
