@@ -9,6 +9,7 @@ const postSchema = z.object({
   cover: z.string().optional(),
   draft: z.boolean().default(false),
   pinned: z.boolean().default(false),
+  theme: z.enum(["amber", "ocean", "forest", "rose", "violet"]).optional(),
 });
 
 const blog = defineCollection({ type: "content", schema: postSchema });

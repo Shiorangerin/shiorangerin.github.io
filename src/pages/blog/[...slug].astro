@@ -2,6 +2,23 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+const tagToTheme: Record<string, "amber" | "ocean" | "forest" | "rose" | "violet"> = {
+  "技术": "ocean", "代码": "ocean", "astro": "ocean", "design": "ocean",
+  "OS": "ocean", "skill": "ocean", "OCG": "ocean", "工具": "ocean",
+  "信仰": "violet", "圣经": "violet", "默想": "violet", "哲学": "violet",
+  "虚无主义": "violet",
+  "瑞克和莫蒂": "rose", "角色扮演": "rose", "OC": "rose", "原创角色": "rose",
+  "创作": "rose", "自我": "rose",
+  "生活": "forest", "杂谈": "forest", "求职": "forest", "职场": "forest",
+  "AI": "amber", "meta": "amber",
+};
+const deriveTheme = (tags: string[]): "amber" | "ocean" | "forest" | "rose" | "violet" => {
+  for (const t of tags) {
+    if (tagToTheme[t]) return tagToTheme[t];
+  }
+  return "amber";
+};
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
   return posts.map((post) => ({
@@ -15,12 +32,13 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, date, updated, tags, cover } = post.data;
+const { title, description, date, updated, tags, cover, theme: fmTheme } = post.data;
 const { Content } = await post.render();
 const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
+const theme = fmTheme ?? deriveTheme(tags ?? []);
 ---
 
-<BaseLayout title={title} description={description} ogImage={cover} ogType="article" articleDate={date.toISOString()} articleUpdated={updated?.toISOString()} articleTags={tags} showProgress={true}>
+<BaseLayout title={title} description={description} ogImage={cover} ogType="article" articleDate={date.toISOString()} articleUpdated={updated?.toISOString()} articleTags={tags} showProgress={true} postTheme={theme}>
   <article class="blog-post animate-in">
     <header class="blog-post-header">
       <h1 class="blog-post-title">{title}</h1>
@@ -50,6 +68,20 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
     </div>
   </article>
 
+  <aside class="article-toc" id="article-toc" aria-label="目录">
+    <div class="article-toc-title">目录</div>
+    <nav class="article-toc-list" id="article-toc-list"></nav>
+  </aside>
+
+  <button class="focus-toggle" id="focus-toggle" type="button" aria-label="切换焦点模式" title="切换焦点模式">
+    <svg class="focus-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    <span class="focus-toggle-label">聚焦</span>
+  </button>
+
 </BaseLayout>
 
 <script>
@@ -68,5 +100,52 @@ const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
       }, 2000);
     });
     pre.appendChild(btn);
+  });
+
+  // ===== Pull-quote auto-detection =====
+  document.querySelectorAll(".blog-post-content blockquote").forEach((bq) => {
+    if ((bq.textContent || "").trim().length > 60) bq.classList.add("pull-quote");
+  });
+
+  // ===== Auto TOC =====
+  const content = document.querySelector<HTMLElement>(".blog-post-content");
+  const toc = document.getElementById("article-toc");
+  const tocList = document.getElementById("article-toc-list");
+  if (content && toc && tocList) {
+    const headings = content.querySelectorAll<HTMLElement>("h2, h3");
+    if (headings.length >= 3) {
+      headings.forEach((h, i) => {
+        if (!h.id) h.id = `h-${i}-${Math.random().toString(36).slice(2, 7)}`;
+        const a = document.createElement("a");
+        a.href = `#${h.id}`;
+        a.className = `article-toc-link article-toc-link--${h.tagName.toLowerCase()}`;
+        a.textContent = h.textContent || "";
+        tocList.appendChild(a);
+      });
+      toc.classList.add("article-toc--visible");
+      const links = tocList.querySelectorAll<HTMLAnchorElement>(".article-toc-link");
+      const setActive = (id: string) => {
+        links.forEach((l) => l.classList.toggle("article-toc-link--active", l.getAttribute("href") === "#" + id));
+      };
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) setActive((entry.target as HTMLElement).id);
+            });
+          },
+          { rootMargin: "-15% 0px -70% 0px", threshold: 0 }
+        );
+        headings.forEach((h) => io.observe(h));
+      }
+    }
+  }
+
+  // ===== Focus mode =====
+  const focusBtn = document.getElementById("focus-toggle");
+  focusBtn?.addEventListener("click", () => {
+    document.body.classList.toggle("focus-mode");
+    const label = focusBtn.querySelector(".focus-toggle-label");
+    if (label) label.textContent = document.body.classList.contains("focus-mode") ? "退出" : "聚焦";
   });
 </script>
