@@ -255,3 +255,97 @@ if (articleDate && ogType === "article") {
     }
   </script>
 )}
+
+<script>
+  // ===== Mouse-following glass highlight =====
+  const glassSelectors = ".glass-card, .blog-card, .view-all-card";
+  const glassEls = document.querySelectorAll<HTMLElement>(glassSelectors);
+  glassEls.forEach((el) => {
+    let raf = 0;
+    el.addEventListener("mousemove", (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const rect = el.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty("--mx", x + "%");
+        el.style.setProperty("--my", y + "%");
+      });
+    });
+  });
+
+  // ===== Magnetic cursor on cards =====
+  const magneticSelectors = ".blog-card, .view-all-card";
+  const magneticEls = document.querySelectorAll<HTMLElement>(magneticSelectors);
+  const STRENGTH = 12;
+  magneticEls.forEach((el) => {
+    let raf = 0;
+    let targetX = 0, targetY = 0, curX = 0, curY = 0;
+    const animate = () => {
+      raf = 0;
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+      el.style.setProperty("--mgx", curX.toFixed(2) + "px");
+      el.style.setProperty("--mgy", curY.toFixed(2) + "px");
+      if (Math.abs(targetX - curX) > 0.1 || Math.abs(targetY - curY) > 0.1) {
+        raf = requestAnimationFrame(animate);
+      } else {
+        el.style.setProperty("--mgx", "0px");
+        el.style.setProperty("--mgy", "0px");
+      }
+    };
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.max(rect.width, rect.height) / 2;
+      const pull = Math.min(1, dist / maxDist);
+      targetX = (dx / dist) * STRENGTH * pull;
+      targetY = (dy / dist) * STRENGTH * pull;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+    el.addEventListener("mouseleave", () => {
+      targetX = 0;
+      targetY = 0;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+  });
+
+  // ===== Scroll-driven reveal for blog content =====
+  const revealEls = document.querySelectorAll<HTMLElement>(
+    ".blog-post-content > h2, .blog-post-content > h3, .blog-post-content > p, .blog-post-content > ul, .blog-post-content > ol, .blog-post-content > pre, .blog-post-content > blockquote, .blog-post-content > img, .blog-post-content > table, .blog-post-content > hr"
+  );
+  if (revealEls.length && "IntersectionObserver" in window) {
+    revealEls.forEach((el) => el.classList.add("reveal"));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("reveal--in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    revealEls.forEach((el) => io.observe(el));
+  }
+
+  // ===== View Transitions API for cross-page =====
+  if ("startViewTransition" in document) {
+    document.addEventListener("click", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (!a) return;
+      if (a.target === "_blank" || a.hasAttribute("download")) return;
+      if (a.origin !== location.origin) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const url = new URL(a.href);
+      if (url.pathname === location.pathname && url.search === location.search && url.hash === "") return;
+      e.preventDefault();
+      (document as any).startViewTransition(() => {
+        window.location.href = a.href;
+      });
+    });
+  }
+</script>
