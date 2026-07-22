@@ -522,34 +522,12 @@ html { transition: --accent 0.4s var(--ease-out), --accent-hover 0.4s var(--ease
 .glass-card::before {
   content: "";
   position: absolute;
-  inset: -8px;
-  border-radius: calc(var(--radius-xl) + 8px);
-  background: conic-gradient(
-    from var(--irid-angle, 0deg) at 50% 50%,
-    rgba(255, 110, 196, 0.7),
-    rgba(120, 115, 245, 0.7),
-    rgba(74, 222, 128, 0.7),
-    rgba(251, 191, 36, 0.7),
-    rgba(255, 110, 196, 0.7)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 8px;
-  filter: blur(16px) saturate(140%);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 30%);
   pointer-events: none;
-  z-index: -1;
-  animation: irid-spin 12s linear infinite;
-  animation-play-state: paused;
+  z-index: 0;
 }
-.glass-card:hover::before { opacity: 0.55; animation-play-state: running; }
 .glass-card > * { position: relative; z-index: 1; }
 .glass-card::after {
   content: "";
@@ -634,39 +612,11 @@ html { transition: --accent 0.4s var(--ease-out), --accent-hover 0.4s var(--ease
 .blog-card::before {
   content: "";
   position: absolute;
-  inset: -8px;
-  border-radius: calc(var(--radius-xl) + 8px);
-  background: conic-gradient(
-    from var(--irid-angle, 0deg) at 50% 50%,
-    rgba(255, 110, 196, 0.7),
-    rgba(120, 115, 245, 0.7),
-    rgba(74, 222, 128, 0.7),
-    rgba(251, 191, 36, 0.7),
-    rgba(255, 110, 196, 0.7)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 8px;
-  filter: blur(14px) saturate(140%);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 28%);
   pointer-events: none;
-  z-index: -1;
-  animation: irid-spin 9s linear infinite;
-  animation-play-state: paused;
-}
-.blog-card:hover::before { opacity: 0.65; animation-play-state: running; }
-@keyframes irid-spin { to { --irid-angle: 360deg; } }
-@property --irid-angle {
-  syntax: "<angle>";
-  inherits: true;
-  initial-value: 0deg;
+  z-index: 0;
 }
 .blog-card::after {
   content: "";
@@ -980,34 +930,12 @@ html { transition: --accent 0.4s var(--ease-out), --accent-hover 0.4s var(--ease
 .view-all-card::before {
   content: "";
   position: absolute;
-  inset: -8px;
-  border-radius: calc(var(--radius-xl) + 8px);
-  background: conic-gradient(
-    from var(--irid-angle, 0deg) at 50% 50%,
-    rgba(255, 110, 196, 0.7),
-    rgba(120, 115, 245, 0.7),
-    rgba(74, 222, 128, 0.7),
-    rgba(251, 191, 36, 0.7),
-    rgba(255, 110, 196, 0.7)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 8px;
-  filter: blur(14px) saturate(140%);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 28%);
   pointer-events: none;
-  z-index: -1;
-  animation: irid-spin 9s linear infinite;
-  animation-play-state: paused;
+  z-index: 0;
 }
-.view-all-card:hover::before { opacity: 0.6; animation-play-state: running; }
 .view-all-card::after {
   content: "";
   position: absolute;
@@ -1341,23 +1269,6 @@ html { transition: --accent 0.4s var(--ease-out), --accent-hover 0.4s var(--ease
   color: var(--accent);
   font-family: "Source Han Serif", "Songti SC", "STSong", "Noto Serif CJK SC", serif;
 }
-
-.blog-post-content blockquote.pull-quote {
-  border-left: none;
-  background: none;
-  padding: 1rem 0;
-  margin: 2.5rem 0.5rem;
-  font-size: 1.4em;
-  font-style: italic;
-  text-align: center;
-  color: var(--text-primary);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-family: "Source Han Serif", "Songti SC", "STSong", "Noto Serif CJK SC", serif;
-  line-height: 1.5;
-}
-.blog-post-content blockquote.pull-quote::before { display: none; }
-.blog-post-content blockquote.pull-quote p { color: var(--text-primary); }
 
 .article-toc {
   position: fixed;

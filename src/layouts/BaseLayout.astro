@@ -402,7 +402,7 @@ if (articleDate && ogType === "article") {
     });
   });
 
-  // ===== 3D tilt + iridescent edge angle =====
+  // ===== 3D tilt =====
   const tiltSelectors = ".glass-card, .blog-card, .view-all-card";
   const tiltEls = document.querySelectorAll<HTMLElement>(tiltSelectors);
   const MAX_TILT = 7;
@@ -428,8 +428,6 @@ if (articleDate && ogType === "article") {
       const dy = e.clientY - cy;
       targetRx = -(dy / (rect.height / 2)) * MAX_TILT;
       targetRy = (dx / (rect.width / 2)) * MAX_TILT;
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-      el.style.setProperty("--irid-angle", angle.toFixed(1) + "deg");
       if (!raf) raf = requestAnimationFrame(animate);
     });
     el.addEventListener("mouseleave", () => {

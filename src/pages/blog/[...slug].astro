@@ -102,11 +102,6 @@ const theme = fmTheme ?? deriveTheme(tags ?? []);
     pre.appendChild(btn);
   });
 
-  // ===== Pull-quote auto-detection =====
-  document.querySelectorAll(".blog-post-content blockquote").forEach((bq) => {
-    if ((bq.textContent || "").trim().length > 60) bq.classList.add("pull-quote");
-  });
-
   // ===== Auto TOC =====
   const content = document.querySelector<HTMLElement>(".blog-post-content");
   const toc = document.getElementById("article-toc");
