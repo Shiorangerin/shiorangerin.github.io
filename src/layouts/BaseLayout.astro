@@ -123,12 +123,24 @@ if (articleDate && ogType === "article") {
     {showProgress && <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>}
     <script>
       (() => {
+        const root = document.documentElement;
         const stored = localStorage.getItem("theme");
-        if (stored !== "light") {
-          document.documentElement.setAttribute("data-theme", "dark");
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+        const apply = (dark: boolean) => {
+          if (dark) root.setAttribute("data-theme", "dark");
+          else root.removeAttribute("data-theme");
+        };
+
+        if (stored === "dark" || stored === "light") {
+          apply(stored === "dark");
         } else {
-          document.documentElement.removeAttribute("data-theme");
+          apply(systemDark.matches);
         }
+
+        systemDark.addEventListener("change", (e) => {
+          if (localStorage.getItem("theme")) return;
+          apply(e.matches);
+        });
       })();
     </script>
 
