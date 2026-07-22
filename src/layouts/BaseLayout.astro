@@ -11,6 +11,7 @@ interface Props {
   articleUpdated?: string;
   articleTags?: string[];
   noindex?: boolean;
+  showProgress?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   articleUpdated,
   articleTags = [],
   noindex,
+  showProgress = false,
 } = Astro.props;
 const siteTitle = "Shiorangerin";
 const siteUrl = "https://shiorangerin.github.io";
@@ -118,6 +120,7 @@ if (articleDate && ogType === "article") {
   </head>
   <body style={`background-image: url(${base}wallpaper.webp)`}>
     <a href="#main-content" class="skip-link">跳到主内容</a>
+    {showProgress && <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>}
     <script>
       (() => {
         const stored = localStorage.getItem("theme");
@@ -208,3 +211,35 @@ if (articleDate && ogType === "article") {
     }
   });
 </script>
+
+{showProgress && (
+  <script>
+    const bar = document.getElementById("reading-progress");
+    const article = document.querySelector<HTMLElement>(".blog-post");
+    if (bar && article) {
+      let raf = 0;
+      const update = () => {
+        raf = 0;
+        const rect = article.getBoundingClientRect();
+        const articleTop = rect.top + window.scrollY;
+        const articleHeight = article.offsetHeight;
+        const viewportH = window.innerHeight;
+        const scrolled = window.scrollY - articleTop;
+        const trackable = Math.max(1, articleHeight - viewportH);
+        const ratio = Math.max(0, Math.min(1, scrolled / trackable));
+        bar.style.width = (ratio * 100).toFixed(2) + "%";
+        if (ratio > 0.02 || window.scrollY > articleTop) {
+          bar.classList.remove("reading-progress--idle");
+        } else {
+          bar.classList.add("reading-progress--idle");
+        }
+      };
+      const onScroll = () => {
+        if (!raf) raf = requestAnimationFrame(update);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      update();
+    }
+  </script>
+)}
