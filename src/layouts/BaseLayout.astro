@@ -1,0 +1,562 @@
+---
+import "../styles/global.css";
+import Sidebar from "../components/Sidebar.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: string;
+  articleDate?: string;
+  articleUpdated?: string;
+  articleTags?: string[];
+  noindex?: boolean;
+  showProgress?: boolean;
+  postTheme?: "amber" | "ocean" | "forest" | "rose" | "violet";
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  ogType = "website",
+  articleDate,
+  articleUpdated,
+  articleTags = [],
+  noindex,
+  showProgress = false,
+  postTheme = "amber",
+} = Astro.props;
+const siteTitle = "Shiorangerin";
+const siteUrl = "https://shiorangerin.github.io";
+const fullTitle = title === "首页" ? siteTitle : `${title} — ${siteTitle}`;
+const desc = description ?? "Shiorangerin 的个人站点 —— 信仰、技术与生活。";
+const currentPath = Astro.url.pathname;
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
+const defaultOgImage = siteUrl + base.replace(/\/$/, "") + "/avatar.jpg";
+
+function isActive(href: string, path: string) {
+  if (href === base || href === base.slice(0, -1)) return path === "/" || path === "";
+  return path.startsWith(href.replace(base, "/"));
+}
+
+const mobileNav = [
+  { href: base, label: "首页", icon: "house" },
+  { href: base + "blog", label: "默想", icon: "pen" },
+  { href: base + "stories", label: "故事", icon: "book" },
+  { href: base + "projects", label: "项目", icon: "code" },
+  { href: base + "bible", label: "读经", icon: "cross" },
+  { href: base + "about", label: "关于", icon: "person" },
+  { href: base + "links", label: "其他", icon: "link" },
+];
+
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage ? (ogImage.startsWith("http") ? ogImage : siteUrl + (ogImage.startsWith("/") ? ogImage : "/" + ogImage)) : defaultOgImage;
+
+const jsonLd: Record<string, unknown>[] = [];
+if (articleDate && ogType === "article") {
+  jsonLd.push({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: desc,
+    datePublished: articleDate,
+    ...(articleUpdated ? { dateModified: articleUpdated } : {}),
+    author: { "@type": "Person", "name": "Shiorangerin", "url": siteUrl },
+    url: canonical,
+  });
+  const collection = currentPath.startsWith("/blog") ? "默想" : currentPath.startsWith("/stories") ? "故事" : "";
+  if (collection) {
+    jsonLd.push({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "首页", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: collection, item: siteUrl + "/" + (currentPath.startsWith("/blog") ? "blog" : "stories") },
+        { "@type": "ListItem", position: 3, name: title },
+      ],
+    });
+  }
+}
+---
+
+<!doctype html>
+<html lang="zh-CN" data-post-theme={postTheme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="Shiorangerin" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@shiorangerin" />
+    <meta name="twitter:creator" content="@shiorangerin" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {articleDate && <meta property="article:published_time" content={articleDate} />}
+    {articleUpdated && <meta property="article:modified_time" content={articleUpdated} />}
+    {articleTags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+    <meta name="theme-color" content="#f5f0e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/png" href={base + "favicon.png"} />
+    <link rel="apple-touch-icon" href={base + "apple-touch-icon.png"} />
+    <link rel="alternate" type="application/rss+xml" title="Shiorangerin 默想" href={base + "rss.xml"} />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    {jsonLd.map((ld) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
+    ))}
+  </head>
+  <body style={`background-image: url(${base}wallpaper.webp)`}>
+    <a href="#main-content" class="skip-link">跳到主内容</a>
+    <div class="aurora" aria-hidden="true">
+      <span class="aurora-blob aurora-blob--1"></span>
+      <span class="aurora-blob aurora-blob--2"></span>
+      <span class="aurora-blob aurora-blob--3"></span>
+      <span class="aurora-blob aurora-blob--4"></span>
+    </div>
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+    <div class="cursor-label" id="cursor-label" aria-hidden="true"></div>
+    {showProgress && <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>}
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const stored = localStorage.getItem("theme");
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+        const apply = (dark: boolean) => {
+          if (dark) root.setAttribute("data-theme", "dark");
+          else root.removeAttribute("data-theme");
+        };
+
+        if (stored === "dark" || stored === "light") {
+          apply(stored === "dark");
+        } else {
+          apply(systemDark.matches);
+        }
+
+        systemDark.addEventListener("change", (e) => {
+          if (localStorage.getItem("theme")) return;
+          apply(e.matches);
+        });
+      })();
+    </script>
+
+    <div class="page-wrapper">
+      <Sidebar currentPath={currentPath} />
+      <main class="main-content" id="main-content">
+        <div class="content-container">
+          <slot />
+        </div>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="移动导航">
+      {mobileNav.map((item) => (
+        <a
+          href={item.href}
+          class={`mobile-nav-item ${isActive(item.href, currentPath) ? "active" : ""}`}
+          aria-label={item.label}
+          aria-current={isActive(item.href, currentPath) ? "page" : undefined}
+        >
+          {item.icon === "house" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z"/><path d="M9 21V13h6v8"/>
+            </svg>
+          )}
+          {item.icon === "pen" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          )}
+          {item.icon === "book" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          )}
+          {item.icon === "cross" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M2 12h20"/>
+            </svg>
+          )}
+          {item.icon === "person" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+            </svg>
+          )}
+          {item.icon === "link" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          )}
+          {item.icon === "code" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+          )}
+          <span>{item.label}</span>
+        </a>
+      ))}
+      <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换明暗模式">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </nav>
+  </body>
+</html>
+
+<script>
+  document.getElementById("mobile-theme-toggle")?.addEventListener("click", () => {
+    const isDark = document.documentElement.hasAttribute("data-theme");
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    }
+  });
+</script>
+
+{showProgress && (
+  <script>
+    const bar = document.getElementById("reading-progress");
+    const article = document.querySelector<HTMLElement>(".blog-post");
+    if (bar && article) {
+      let raf = 0;
+      const update = () => {
+        raf = 0;
+        const rect = article.getBoundingClientRect();
+        const articleTop = rect.top + window.scrollY;
+        const articleHeight = article.offsetHeight;
+        const viewportH = window.innerHeight;
+        const scrolled = window.scrollY - articleTop;
+        const trackable = Math.max(1, articleHeight - viewportH);
+        const ratio = Math.max(0, Math.min(1, scrolled / trackable));
+        bar.style.width = (ratio * 100).toFixed(2) + "%";
+        if (ratio > 0.02 || window.scrollY > articleTop) {
+          bar.classList.remove("reading-progress--idle");
+        } else {
+          bar.classList.add("reading-progress--idle");
+        }
+      };
+      const onScroll = () => {
+        if (!raf) raf = requestAnimationFrame(update);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      update();
+    }
+  </script>
+)}
+
+<script>
+  // ===== Custom Cursor =====
+  const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (isFinePointer && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const dot = document.getElementById("cursor-dot") as HTMLElement | null;
+    const ring = document.getElementById("cursor-ring") as HTMLElement | null;
+    const label = document.getElementById("cursor-label") as HTMLElement | null;
+    if (dot && ring && label) {
+      let mouseX = -100, mouseY = -100;
+      let ringX = -100, ringY = -100;
+      let raf = 0;
+      const tick = () => {
+        raf = 0;
+        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        label.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(1)`;
+        if (Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
+          raf = requestAnimationFrame(tick);
+        }
+      };
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        if (document.body.getAttribute("data-cursor") !== "ready") {
+          document.body.setAttribute("data-cursor", "ready");
+        }
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+      document.addEventListener("mouseleave", () => document.body.removeAttribute("data-cursor"));
+      document.addEventListener("mouseenter", () => document.body.setAttribute("data-cursor", "ready"));
+
+      const setState = (state: string, text?: string) => {
+        if (state) {
+          document.body.setAttribute("data-cursor", state);
+        } else {
+          document.body.setAttribute("data-cursor", "ready");
+        }
+        if (text) {
+          label.textContent = text;
+          label.style.opacity = "1";
+        } else {
+          label.style.opacity = "0";
+          label.textContent = "";
+        }
+      };
+
+      const isText = (el: Element) =>
+        el.tagName === "INPUT" || el.tagName === "TEXTAREA" || (el as HTMLElement).isContentEditable;
+      const isCard = (el: Element) =>
+        el.classList?.contains("blog-card") || el.classList?.contains("view-all-card") || el.classList?.contains("glass-card");
+
+      document.addEventListener("mouseover", (e) => {
+        const t = e.target as HTMLElement;
+        if (isText(t)) {
+          setState("text");
+          document.documentElement.classList.add("is-typing");
+        } else if (isCard(t)) {
+          setState("card");
+        } else if (t.closest("a, button")) {
+          const linkEl = t.closest("a") as HTMLAnchorElement | null;
+          const labelText = linkEl?.dataset?.cursorLabel;
+          setState("link", labelText);
+        } else {
+          setState("ready");
+        }
+      });
+      document.addEventListener("mouseout", (e) => {
+        const t = e.target as HTMLElement;
+        if (isText(t)) {
+          document.documentElement.classList.remove("is-typing");
+        }
+      });
+    }
+  }
+
+  // ===== Time-of-day theming =====
+  const timePalettes: Record<string, Record<string, string>> = {
+    dawn:    { "aurora-1": "rgba(255, 154, 139, 0.55)", "aurora-2": "rgba(255, 196, 137, 0.45)", "aurora-3": "rgba(212, 130, 200, 0.30)", "aurora-4": "rgba(255, 154, 174, 0.25)" },
+    morning: { "aurora-1": "rgba(255, 184, 108, 0.50)", "aurora-2": "rgba(255, 213,  99, 0.45)", "aurora-3": "rgba(255, 154, 139, 0.28)", "aurora-4": "rgba(120, 200, 255, 0.22)" },
+    noon:    { "aurora-1": "rgba(255, 220, 130, 0.50)", "aurora-2": "rgba(255, 200, 100, 0.42)", "aurora-3": "rgba(120, 220, 200, 0.28)", "aurora-4": "rgba(100, 200, 255, 0.22)" },
+    afternoon:{ "aurora-1": "rgba(180, 210, 140, 0.48)", "aurora-2": "rgba(140, 220, 180, 0.40)", "aurora-3": "rgba(120, 200, 220, 0.28)", "aurora-4": "rgba(180, 150, 220, 0.22)" },
+    evening: { "aurora-1": "rgba(255, 130, 150, 0.55)", "aurora-2": "rgba(220, 100, 200, 0.45)", "aurora-3": "rgba(180, 100, 200, 0.32)", "aurora-4": "rgba(255, 100, 100, 0.24)" },
+    night:   { "aurora-1": "rgba(110, 110, 220, 0.50)", "aurora-2": "rgba( 80,  80, 220, 0.42)", "aurora-3": "rgba(150, 100, 200, 0.30)", "aurora-4": "rgba(100, 150, 220, 0.24)" },
+    midnight:{ "aurora-1": "rgba( 50,  50, 140, 0.45)", "aurora-2": "rgba( 60,  30, 110, 0.38)", "aurora-3": "rgba( 80,  50, 140, 0.30)", "aurora-4": "rgba( 40,  60, 120, 0.24)" },
+  };
+  const timePalettesDark: Record<string, Record<string, string>> = {
+    dawn:    { "aurora-1": "rgba(255, 154, 139, 0.30)", "aurora-2": "rgba(255, 196, 137, 0.26)", "aurora-3": "rgba(212, 130, 200, 0.22)", "aurora-4": "rgba(255, 154, 174, 0.18)" },
+    morning: { "aurora-1": "rgba(255, 184, 108, 0.28)", "aurora-2": "rgba(255, 213,  99, 0.26)", "aurora-3": "rgba(255, 154, 139, 0.20)", "aurora-4": "rgba(120, 200, 255, 0.16)" },
+    noon:    { "aurora-1": "rgba(255, 220, 130, 0.28)", "aurora-2": "rgba(255, 200, 100, 0.24)", "aurora-3": "rgba(120, 220, 200, 0.20)", "aurora-4": "rgba(100, 200, 255, 0.16)" },
+    afternoon:{ "aurora-1": "rgba(180, 210, 140, 0.26)", "aurora-2": "rgba(140, 220, 180, 0.24)", "aurora-3": "rgba(120, 200, 220, 0.20)", "aurora-4": "rgba(180, 150, 220, 0.16)" },
+    evening: { "aurora-1": "rgba(255, 130, 150, 0.30)", "aurora-2": "rgba(220, 100, 200, 0.26)", "aurora-3": "rgba(180, 100, 200, 0.22)", "aurora-4": "rgba(255, 100, 100, 0.18)" },
+    night:   { "aurora-1": "rgba(110, 110, 220, 0.28)", "aurora-2": "rgba( 80,  80, 220, 0.24)", "aurora-3": "rgba(150, 100, 200, 0.20)", "aurora-4": "rgba(100, 150, 220, 0.18)" },
+    midnight:{ "aurora-1": "rgba( 50,  50, 140, 0.26)", "aurora-2": "rgba( 60,  30, 110, 0.22)", "aurora-3": "rgba( 80,  50, 140, 0.20)", "aurora-4": "rgba( 40,  60, 120, 0.18)" },
+  };
+  const getTimeOfDay = (h: number) => {
+    if (h >= 5 && h < 8) return "dawn";
+    if (h >= 8 && h < 11) return "morning";
+    if (h >= 11 && h < 14) return "noon";
+    if (h >= 14 && h < 17) return "afternoon";
+    if (h >= 17 && h < 20) return "evening";
+    if (h >= 20 && h < 23) return "night";
+    return "midnight";
+  };
+  const applyTimePalette = () => {
+    const isDark = document.documentElement.hasAttribute("data-theme");
+    const t = getTimeOfDay(new Date().getHours());
+    const palette = isDark ? timePalettesDark[t] : timePalettes[t];
+    Object.entries(palette).forEach(([k, v]) => {
+      document.documentElement.style.setProperty(`--${k}`, v);
+    });
+    document.documentElement.setAttribute("data-time", t);
+  };
+  applyTimePalette();
+  setInterval(applyTimePalette, 5 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) applyTimePalette(); });
+
+  // ===== Mouse-following glass highlight =====
+  const glassSelectors = ".glass-card, .blog-card, .view-all-card";
+  const glassEls = document.querySelectorAll<HTMLElement>(glassSelectors);
+  glassEls.forEach((el) => {
+    let raf = 0;
+    el.addEventListener("mousemove", (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const rect = el.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty("--mx", x + "%");
+        el.style.setProperty("--my", y + "%");
+      });
+    });
+  });
+
+  // ===== 3D tilt =====
+  const tiltSelectors = ".glass-card, .blog-card, .view-all-card";
+  const tiltEls = document.querySelectorAll<HTMLElement>(tiltSelectors);
+  const MAX_TILT = 7;
+  tiltEls.forEach((el) => {
+    let raf = 0;
+    let curRx = 0, curRy = 0;
+    let targetRx = 0, targetRy = 0;
+    const animate = () => {
+      raf = 0;
+      curRx += (targetRx - curRx) * 0.14;
+      curRy += (targetRy - curRy) * 0.14;
+      el.style.setProperty("--rx", curRx.toFixed(2) + "deg");
+      el.style.setProperty("--ry", curRy.toFixed(2) + "deg");
+      if (Math.abs(targetRx - curRx) > 0.05 || Math.abs(targetRy - curRy) > 0.05) {
+        raf = requestAnimationFrame(animate);
+      }
+    };
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      targetRx = -(dy / (rect.height / 2)) * MAX_TILT;
+      targetRy = (dx / (rect.width / 2)) * MAX_TILT;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+    el.addEventListener("mouseleave", () => {
+      targetRx = 0;
+      targetRy = 0;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+  });
+
+  // ===== Magnetic cursor on cards =====
+  const magneticSelectors = ".blog-card, .view-all-card";
+  const magneticEls = document.querySelectorAll<HTMLElement>(magneticSelectors);
+  const STRENGTH = 12;
+  magneticEls.forEach((el) => {
+    let raf = 0;
+    let targetX = 0, targetY = 0, curX = 0, curY = 0;
+    const animate = () => {
+      raf = 0;
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+      el.style.setProperty("--mgx", curX.toFixed(2) + "px");
+      el.style.setProperty("--mgy", curY.toFixed(2) + "px");
+      if (Math.abs(targetX - curX) > 0.1 || Math.abs(targetY - curY) > 0.1) {
+        raf = requestAnimationFrame(animate);
+      } else {
+        el.style.setProperty("--mgx", "0px");
+        el.style.setProperty("--mgy", "0px");
+      }
+    };
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.max(rect.width, rect.height) / 2;
+      const pull = Math.min(1, dist / maxDist);
+      targetX = (dx / dist) * STRENGTH * pull;
+      targetY = (dy / dist) * STRENGTH * pull;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+    el.addEventListener("mouseleave", () => {
+      targetX = 0;
+      targetY = 0;
+      if (!raf) raf = requestAnimationFrame(animate);
+    });
+  });
+
+  // ===== Scroll-driven reveal for blog content =====
+  const revealEls = document.querySelectorAll<HTMLElement>(
+    ".blog-post-content > h2, .blog-post-content > h3, .blog-post-content > p, .blog-post-content > ul, .blog-post-content > ol, .blog-post-content > pre, .blog-post-content > blockquote, .blog-post-content > img, .blog-post-content > table, .blog-post-content > hr"
+  );
+  if (revealEls.length && "IntersectionObserver" in window) {
+    revealEls.forEach((el) => el.classList.add("reveal"));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("reveal--in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    revealEls.forEach((el) => io.observe(el));
+  }
+
+  // ===== View Transitions API for cross-page =====
+  if ("startViewTransition" in document) {
+    document.addEventListener("click", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (!a) return;
+      if (a.target === "_blank" || a.hasAttribute("download")) return;
+      if (a.origin !== location.origin) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const url = new URL(a.href);
+      if (url.pathname === location.pathname && url.search === location.search && url.hash === "") return;
+      e.preventDefault();
+      (document as any).startViewTransition(() => {
+        window.location.href = a.href;
+      });
+    });
+  }
+
+  // ===== Kinetic Hero =====
+  const hero = document.querySelector<HTMLElement>(".kinetic-hero[data-kinetic]");
+  if (hero && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const verse = hero.querySelector<HTMLElement>(".bible-verse");
+    if (verse) {
+      const text = verse.textContent ?? "";
+      const frag = document.createDocumentFragment();
+      Array.from(text).forEach((ch, i) => {
+        const span = document.createElement("span");
+        span.className = "char";
+        span.textContent = ch;
+        span.style.animationDelay = (40 + i * 28) + "ms";
+        if (ch.trim() === "") span.style.whiteSpace = "pre";
+        frag.appendChild(span);
+      });
+      verse.textContent = "";
+      verse.appendChild(frag);
+
+      verse.addEventListener("mouseover", (e) => {
+        const t = e.target as HTMLElement;
+        if (t.classList.contains("char")) t.setAttribute("data-cursor", "over");
+      });
+      verse.addEventListener("mouseout", (e) => {
+        const t = e.target as HTMLElement;
+        if (t.classList.contains("char")) t.removeAttribute("data-cursor");
+      });
+
+      // Scroll parallax on chars
+      const chars = verse.querySelectorAll<HTMLElement>(".char");
+      let raf = 0;
+      const onScroll = () => {
+        raf = 0;
+        const rect = hero.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const progress = Math.max(-0.6, Math.min(0.6, -rect.top / vh));
+        chars.forEach((c, i) => {
+          const center = (chars.length - 1) / 2;
+          const factor = (i - center) / center;
+          const ty = progress * 18 * factor;
+          c.style.translate = `0 ${ty.toFixed(2)}px`;
+        });
+      };
+      window.addEventListener("scroll", () => {
+        if (!raf) raf = requestAnimationFrame(onScroll);
+      }, { passive: true });
+      onScroll();
+    }
+  }
+</script>

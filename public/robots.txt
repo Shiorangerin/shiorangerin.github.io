@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shiorangerin.github.io/sitemap-index.xml
