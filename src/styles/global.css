@@ -415,15 +415,6 @@ textarea {
   text-overflow: ellipsis;
 }
 
-.chat-subtitle {
-  margin: 1px 0 0;
-  font-size: 12.5px;
-  color: var(--text-tertiary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .chat-scroll {
   flex: 1;
   overflow-y: auto;
