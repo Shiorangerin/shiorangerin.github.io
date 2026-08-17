@@ -981,24 +981,6 @@ a.thread:focus-visible::after {
   /* 兼容搜索脚本选择器；样式由 thread-desc / thread-meta 提供 */
 }
 
-.glass-card {
-  background: var(--bg-hover);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  color: var(--text-primary);
-}
-
-.glass-card h1,
-.glass-card h2,
-.glass-card h3 {
-  margin-top: 0;
-}
-
-.accent-line {
-  display: none;
-}
-
 .about-section {
   margin-bottom: 1.5rem;
 }
@@ -1062,49 +1044,6 @@ a.thread:focus-visible::after {
   font-size: 0.9rem;
 }
 
-.view-all-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  background: var(--bg-hover);
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
-}
-
-.view-all-card:hover {
-  background: var(--bg-active);
-}
-
-.view-all-card-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.view-all-card-count {
-  display: block;
-  margin-top: 2px;
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-}
-
-.view-all-card-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-.view-all-card-action svg {
-  width: 16px;
-  height: 16px;
-}
-
 .bible-verse {
   position: relative;
   display: inline;
@@ -1142,10 +1081,6 @@ a.thread:focus-visible::after {
 
 .focus-toggle {
   display: none;
-}
-
-.repo-card {
-  /* 页面内 style 块负责细节样式；此处提供 thread 外观兜底 */
 }
 
 .animate-in {

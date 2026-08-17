@@ -88,15 +88,18 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
         </div>
       ) : (
         repos.filter((r) => !r.fork || r.stargazers_count > 0).map((repo) => (
-          <div class="thread repo-card">
-            <div class="repo-header">
-              <a href={repo.html_url} class="repo-name" target="_blank" rel="noopener noreferrer">
-                <svg class="repo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                </svg>
-                {repo.name}
-              </a>
-              <div class="repo-meta">
+          <div class="thread">
+            <div class="thread-main">
+              <div class="thread-title">
+                <a href={repo.html_url} class="repo-name" target="_blank" rel="noopener noreferrer">
+                  <svg class="repo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                  </svg>
+                  {repo.name}
+                </a>
+              </div>
+              {repo.description && <p class="thread-desc repo-desc">{repo.description}</p>}
+              <div class="thread-meta repo-meta">
                 <span class="repo-stars">
                   <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="14" height="14" aria-hidden="true">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -111,13 +114,12 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
                 )}
                 <span class="repo-updated">{formatDate(repo.updated_at)}</span>
               </div>
+              {repo.homepage && (
+                <a href={repo.homepage} class="repo-homepage" target="_blank" rel="noopener noreferrer">
+                  {repo.homepage.replace(/^https?:\/\//, "")}
+                </a>
+              )}
             </div>
-            {repo.description && <p class="repo-desc">{repo.description}</p>}
-            {repo.homepage && (
-              <a href={repo.homepage} class="repo-homepage" target="_blank" rel="noopener noreferrer">
-                {repo.homepage.replace(/^https?:\/\//, "")}
-              </a>
-            )}
           </div>
         ))
       )
@@ -126,49 +128,37 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 </BaseLayout>
 
 <style>
-  .repo-card {
-    padding: 1rem 1.25rem;
-    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
-  }
-  .repo-card:hover {
-    transform: translateY(-1px);
-  }
-  .repo-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    width: 100%;
-  }
   .repo-name {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--accent);
+    color: var(--text-primary);
     text-decoration: none;
+    font-weight: 600;
+    min-width: 0;
+    overflow-wrap: break-word;
   }
   .repo-name:hover {
-    text-decoration: underline;
+    color: var(--accent);
   }
   .repo-icon {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
+    color: var(--text-tertiary);
   }
   .repo-meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 12px;
     color: var(--text-tertiary);
   }
   .repo-stars {
     display: inline-flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.25rem;
     color: var(--text-secondary);
   }
   .repo-lang {
@@ -186,17 +176,10 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
   .repo-updated {
     white-space: nowrap;
   }
-  .repo-desc {
-    margin: 0.5rem 0 0;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    width: 100%;
-  }
   .repo-homepage {
     display: inline-block;
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    font-size: 12px;
     color: var(--text-tertiary);
     text-decoration: none;
     word-break: break-all;
