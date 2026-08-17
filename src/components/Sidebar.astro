@@ -113,16 +113,4 @@ const iconMap: Record<string, string> = {
     const p = a.getAttribute("data-platform");
     if (p && links[p]) a.href = links[p]();
   });
-
-  const toggle = document.getElementById("theme-toggle");
-  toggle?.addEventListener("click", () => {
-    const isDark = document.documentElement.hasAttribute("data-theme");
-    if (isDark) {
-      document.documentElement.removeAttribute("data-theme");
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.setAttribute("data-theme", "dark");
-      localStorage.setItem("theme", "dark");
-    }
-  });
 </script>

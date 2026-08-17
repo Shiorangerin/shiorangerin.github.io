@@ -7,7 +7,7 @@ interface Props {
 const { title, className } = Astro.props;
 ---
 
-<div class:list={["glass-card", className]}>
+<div class:list={["bubble", "bubble--assistant", className]}>
   {title && <h2 style="margin-bottom: 1.25rem;">{title}</h2>}
   <slot />
 </div>

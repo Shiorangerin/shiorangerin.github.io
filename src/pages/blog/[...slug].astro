@@ -36,52 +36,50 @@ const { title, description, date, updated, tags, cover, theme: fmTheme } = post.
 const { Content } = await post.render();
 const readingTime = Math.max(1, Math.ceil((post.body?.length ?? 0) / 600));
 const theme = fmTheme ?? deriveTheme(tags ?? []);
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
-<BaseLayout title={title} description={description} ogImage={cover} ogType="article" articleDate={date.toISOString()} articleUpdated={updated?.toISOString()} articleTags={tags} showProgress={true} postTheme={theme}>
-  <article class="blog-post animate-in">
-    <header class="blog-post-header">
-      <h1 class="blog-post-title">{title}</h1>
-      <div class="blog-post-meta">
-        <time datetime={date.toISOString()}>
-          {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
-        </time>
-        {updated && (
-          <span>
-            Updated{" "}
-            <time datetime={updated.toISOString()}>
-              {updated.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" })}
-            </time>
-          </span>
-        )}
-        <span>{readingTime} 分钟阅读</span>
-      </div>
-      {tags.length > 0 && (
-        <div class="tags" style="margin-top: 1rem;">
-          {tags.map((tag) => <span class="tag">#{tag}</span>)}
+<BaseLayout title={title} description={description} ogImage={cover} ogType="article" articleDate={date.toISOString()} articleUpdated={updated?.toISOString()} articleTags={tags} showProgress={false} postTheme={theme}>
+  <article class="msg msg--user">
+    <div class="msg-body">
+      <div class="bubble bubble--user">
+        我想读这一篇
+        <div class="blog-post-meta">
+          <time datetime={date.toISOString()}>
+            {date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+          </time>
+          {updated && (
+            <span>
+              Updated{" "}
+              <time datetime={updated.toISOString()}>
+                {updated.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" })}
+              </time>
+            </span>
+          )}
+          <span>{readingTime} 分钟阅读</span>
+          {tags.length > 0 && <span>{tags.map((tag) => `#${tag}`).join(" ")}</span>}
         </div>
-      )}
-    </header>
-
-    <div class="blog-post-content">
-      <Content />
+      </div>
     </div>
   </article>
 
-  <aside class="article-toc" id="article-toc" aria-label="目录">
-    <div class="article-toc-title">目录</div>
-    <nav class="article-toc-list" id="article-toc-list"></nav>
-  </aside>
+  <article class="msg msg--assistant">
+    <div class="msg-avatar">
+      <img src={base + "avatar.jpg"} alt="Shiorangerin" />
+    </div>
+    <div class="msg-body">
+      <div class="bubble bubble--assistant">
+        <div class="blog-post-content">
+          <Content />
+        </div>
 
-  <button class="focus-toggle" id="focus-toggle" type="button" aria-label="切换焦点模式" title="切换焦点模式">
-    <svg class="focus-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-      <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-    <span class="focus-toggle-label">聚焦</span>
-  </button>
-
+        <aside class="article-toc" id="article-toc" aria-label="目录">
+          <div class="article-toc-title">目录</div>
+          <nav class="article-toc-list" id="article-toc-list"></nav>
+        </aside>
+      </div>
+    </div>
+  </article>
 </BaseLayout>
 
 <script>
@@ -135,12 +133,4 @@ const theme = fmTheme ?? deriveTheme(tags ?? []);
       }
     }
   }
-
-  // ===== Focus mode =====
-  const focusBtn = document.getElementById("focus-toggle");
-  focusBtn?.addEventListener("click", () => {
-    document.body.classList.toggle("focus-mode");
-    const label = focusBtn.querySelector(".focus-toggle-label");
-    if (label) label.textContent = document.body.classList.contains("focus-mode") ? "退出" : "聚焦";
-  });
 </script>

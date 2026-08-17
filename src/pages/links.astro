@@ -1,42 +1,48 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
 <BaseLayout title="其他链接" description="他人在此托管的内容。">
-  <section class="animate-in">
-    <div class="glass-card">
-      <h1>其他链接</h1>
-      <p>
-        <span class="bible-verse" data-ref="哥林多前书 10:31">所以，你们或吃或喝，无论做什么，都要为荣耀神而行。</span>
-      </p>
+  <article class="msg msg--assistant">
+    <div class="msg-avatar">
+      <img src={base + "avatar.jpg"} alt="Shiorangerin" />
     </div>
-  </section>
+    <div class="msg-body">
+      <div class="bubble bubble--assistant">
+        <p>
+          <span class="bible-verse" data-ref="哥林多前书 10:31">所以，你们或吃或喝，无论做什么，都要为荣耀神而行。</span>
+        </p>
 
-  <section style="margin-top: 1.5rem;">
-    <div class="glass-card animate-in">
-      <h3>
-        <a href="/cktcb" class="link-title">CANDLELIGHT · 海龟汤故事集</a>
-      </h3>
-      <p class="link-desc">
-        一个收藏诡异风格短篇故事的站点，源自群友创作。收录各类悬疑、惊悚及超自然主题的叙事作品。页面风格为暗色古典，带有「CLASSIFIED ARCHIVE ACCESS」的档案馆气质。
-      </p>
-      <div class="tags">
-        <a href="/cktcb" class="link-btn">前往 CANDLELIGHT</a>
+        <div style="margin-top: 1.25rem;">
+          <div class="glass-card" style="margin-top: 0;">
+            <h3 style="margin: 0;">
+              <a href="/cktcb" class="link-title">CANDLELIGHT · 海龟汤故事集</a>
+            </h3>
+            <p class="link-desc">
+              一个收藏诡异风格短篇故事的站点，源自群友创作。收录各类悬疑、惊悚及超自然主题的叙事作品。页面风格为暗色古典，带有「CLASSIFIED ARCHIVE ACCESS」的档案馆气质。
+            </p>
+            <div class="tags">
+              <a href="/cktcb" class="link-btn">前往 CANDLELIGHT</a>
+            </div>
+          </div>
+
+          <div class="glass-card" style="margin-top: 1rem;">
+            <h3 style="margin: 0;">
+              <a href="/EFSC" class="link-title">EFSC · 终末地代肝价目表生成器</a>
+            </h3>
+            <p class="link-desc">
+              基于《明日方舟：终末地》风格设计的代肝服务价目表在线生成工具。支持自定义商品列表、操作员信息、预设模板，提供暗/亮双主题，并可直接导出为 900×1200 竖版 PNG 图片。
+            </p>
+            <div class="tags">
+              <a href="/EFSC" class="link-btn">前往 EFSC</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="glass-card animate-in" style="margin-top: 1rem;">
-      <h3>
-        <a href="/EFSC" class="link-title">EFSC · 终末地代肝价目表生成器</a>
-      </h3>
-      <p class="link-desc">
-        基于《明日方舟：终末地》风格设计的代肝服务价目表在线生成工具。支持自定义商品列表、操作员信息、预设模板，提供暗/亮双主题，并可直接导出为 900×1200 竖版 PNG 图片。
-      </p>
-      <div class="tags">
-        <a href="/EFSC" class="link-btn">前往 EFSC</a>
-      </div>
-    </div>
-  </section>
+  </article>
 </BaseLayout>
 
 <style>

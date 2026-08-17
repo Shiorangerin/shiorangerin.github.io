@@ -24,7 +24,6 @@ const {
   articleUpdated,
   articleTags = [],
   noindex,
-  showProgress = false,
   postTheme = "amber",
 } = Astro.props;
 const siteTitle = "Shiorangerin";
@@ -119,19 +118,7 @@ if (articleDate && ogType === "article") {
     {jsonLd.map((ld) => (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
     ))}
-  </head>
-  <body style={`background-image: url(${base}wallpaper.webp)`}>
-    <a href="#main-content" class="skip-link">跳到主内容</a>
-    <div class="aurora" aria-hidden="true">
-      <span class="aurora-blob aurora-blob--1"></span>
-      <span class="aurora-blob aurora-blob--2"></span>
-      <span class="aurora-blob aurora-blob--3"></span>
-      <span class="aurora-blob aurora-blob--4"></span>
-    </div>
-    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
-    <div class="cursor-label" id="cursor-label" aria-hidden="true"></div>
-    {showProgress && <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>}
+
     <script>
       (() => {
         const root = document.documentElement;
@@ -154,12 +141,50 @@ if (articleDate && ogType === "article") {
         });
       })();
     </script>
-
-    <div class="page-wrapper">
+  </head>
+  <body class="app-body">
+    <a href="#main-content" class="skip-link">跳到主内容</a>
+    <div class="app">
       <Sidebar currentPath={currentPath} />
-      <main class="main-content" id="main-content">
-        <div class="content-container">
-          <slot />
+
+      <main class="chat" id="main-content">
+        <header class="chat-header">
+          <div class="chat-header-inner">
+            <h1 class="chat-title">{title}</h1>
+            {description && <p class="chat-subtitle">{description}</p>}
+          </div>
+        </header>
+
+        <div class="chat-scroll">
+          <div class="chat-stream">
+            <slot />
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <slot name="composer">
+            <div class="composer" role="search">
+              <div class="composer-box">
+                <svg class="composer-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <input
+                  type="search"
+                  class="composer-input"
+                  placeholder="选择一个会话开始阅读"
+                  aria-label="选择一个会话开始阅读"
+                  readonly
+                />
+                <button class="composer-send" type="button" disabled aria-label="发送">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m22 2-7 20-4-9-9-4 20-7z" />
+                    <path d="M22 2 11 13" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </slot>
         </div>
       </main>
     </div>
@@ -223,7 +248,7 @@ if (articleDate && ogType === "article") {
 </html>
 
 <script>
-  document.getElementById("mobile-theme-toggle")?.addEventListener("click", () => {
+  const toggleTheme = () => {
     const isDark = document.documentElement.hasAttribute("data-theme");
     if (isDark) {
       document.documentElement.removeAttribute("data-theme");
@@ -232,331 +257,7 @@ if (articleDate && ogType === "article") {
       document.documentElement.setAttribute("data-theme", "dark");
       localStorage.setItem("theme", "dark");
     }
-  });
-</script>
-
-{showProgress && (
-  <script>
-    const bar = document.getElementById("reading-progress");
-    const article = document.querySelector<HTMLElement>(".blog-post");
-    if (bar && article) {
-      let raf = 0;
-      const update = () => {
-        raf = 0;
-        const rect = article.getBoundingClientRect();
-        const articleTop = rect.top + window.scrollY;
-        const articleHeight = article.offsetHeight;
-        const viewportH = window.innerHeight;
-        const scrolled = window.scrollY - articleTop;
-        const trackable = Math.max(1, articleHeight - viewportH);
-        const ratio = Math.max(0, Math.min(1, scrolled / trackable));
-        bar.style.width = (ratio * 100).toFixed(2) + "%";
-        if (ratio > 0.02 || window.scrollY > articleTop) {
-          bar.classList.remove("reading-progress--idle");
-        } else {
-          bar.classList.add("reading-progress--idle");
-        }
-      };
-      const onScroll = () => {
-        if (!raf) raf = requestAnimationFrame(update);
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll);
-      update();
-    }
-  </script>
-)}
-
-<script>
-  // ===== Custom Cursor =====
-  const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (isFinePointer && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const dot = document.getElementById("cursor-dot") as HTMLElement | null;
-    const ring = document.getElementById("cursor-ring") as HTMLElement | null;
-    const label = document.getElementById("cursor-label") as HTMLElement | null;
-    if (dot && ring && label) {
-      let mouseX = -100, mouseY = -100;
-      let ringX = -100, ringY = -100;
-      let raf = 0;
-      const tick = () => {
-        raf = 0;
-        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
-        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-        label.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(1)`;
-        if (Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
-          raf = requestAnimationFrame(tick);
-        }
-      };
-      document.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        if (document.body.getAttribute("data-cursor") !== "ready") {
-          document.body.setAttribute("data-cursor", "ready");
-        }
-        if (!raf) raf = requestAnimationFrame(tick);
-      });
-      document.addEventListener("mouseleave", () => document.body.removeAttribute("data-cursor"));
-      document.addEventListener("mouseenter", () => document.body.setAttribute("data-cursor", "ready"));
-
-      const setState = (state: string, text?: string) => {
-        if (state) {
-          document.body.setAttribute("data-cursor", state);
-        } else {
-          document.body.setAttribute("data-cursor", "ready");
-        }
-        if (text) {
-          label.textContent = text;
-          label.style.opacity = "1";
-        } else {
-          label.style.opacity = "0";
-          label.textContent = "";
-        }
-      };
-
-      const isText = (el: Element) =>
-        el.tagName === "INPUT" || el.tagName === "TEXTAREA" || (el as HTMLElement).isContentEditable;
-      const isCard = (el: Element) =>
-        el.classList?.contains("blog-card") || el.classList?.contains("view-all-card") || el.classList?.contains("glass-card");
-
-      document.addEventListener("mouseover", (e) => {
-        const t = e.target as HTMLElement;
-        if (isText(t)) {
-          setState("text");
-          document.documentElement.classList.add("is-typing");
-        } else if (isCard(t)) {
-          setState("card");
-        } else if (t.closest("a, button")) {
-          const linkEl = t.closest("a") as HTMLAnchorElement | null;
-          const labelText = linkEl?.dataset?.cursorLabel;
-          setState("link", labelText);
-        } else {
-          setState("ready");
-        }
-      });
-      document.addEventListener("mouseout", (e) => {
-        const t = e.target as HTMLElement;
-        if (isText(t)) {
-          document.documentElement.classList.remove("is-typing");
-        }
-      });
-    }
-  }
-
-  // ===== Time-of-day theming =====
-  const timePalettes: Record<string, Record<string, string>> = {
-    dawn:    { "aurora-1": "rgba(255, 154, 139, 0.55)", "aurora-2": "rgba(255, 196, 137, 0.45)", "aurora-3": "rgba(212, 130, 200, 0.30)", "aurora-4": "rgba(255, 154, 174, 0.25)" },
-    morning: { "aurora-1": "rgba(255, 184, 108, 0.50)", "aurora-2": "rgba(255, 213,  99, 0.45)", "aurora-3": "rgba(255, 154, 139, 0.28)", "aurora-4": "rgba(120, 200, 255, 0.22)" },
-    noon:    { "aurora-1": "rgba(255, 220, 130, 0.50)", "aurora-2": "rgba(255, 200, 100, 0.42)", "aurora-3": "rgba(120, 220, 200, 0.28)", "aurora-4": "rgba(100, 200, 255, 0.22)" },
-    afternoon:{ "aurora-1": "rgba(180, 210, 140, 0.48)", "aurora-2": "rgba(140, 220, 180, 0.40)", "aurora-3": "rgba(120, 200, 220, 0.28)", "aurora-4": "rgba(180, 150, 220, 0.22)" },
-    evening: { "aurora-1": "rgba(255, 130, 150, 0.55)", "aurora-2": "rgba(220, 100, 200, 0.45)", "aurora-3": "rgba(180, 100, 200, 0.32)", "aurora-4": "rgba(255, 100, 100, 0.24)" },
-    night:   { "aurora-1": "rgba(110, 110, 220, 0.50)", "aurora-2": "rgba( 80,  80, 220, 0.42)", "aurora-3": "rgba(150, 100, 200, 0.30)", "aurora-4": "rgba(100, 150, 220, 0.24)" },
-    midnight:{ "aurora-1": "rgba( 50,  50, 140, 0.45)", "aurora-2": "rgba( 60,  30, 110, 0.38)", "aurora-3": "rgba( 80,  50, 140, 0.30)", "aurora-4": "rgba( 40,  60, 120, 0.24)" },
   };
-  const timePalettesDark: Record<string, Record<string, string>> = {
-    dawn:    { "aurora-1": "rgba(255, 154, 139, 0.30)", "aurora-2": "rgba(255, 196, 137, 0.26)", "aurora-3": "rgba(212, 130, 200, 0.22)", "aurora-4": "rgba(255, 154, 174, 0.18)" },
-    morning: { "aurora-1": "rgba(255, 184, 108, 0.28)", "aurora-2": "rgba(255, 213,  99, 0.26)", "aurora-3": "rgba(255, 154, 139, 0.20)", "aurora-4": "rgba(120, 200, 255, 0.16)" },
-    noon:    { "aurora-1": "rgba(255, 220, 130, 0.28)", "aurora-2": "rgba(255, 200, 100, 0.24)", "aurora-3": "rgba(120, 220, 200, 0.20)", "aurora-4": "rgba(100, 200, 255, 0.16)" },
-    afternoon:{ "aurora-1": "rgba(180, 210, 140, 0.26)", "aurora-2": "rgba(140, 220, 180, 0.24)", "aurora-3": "rgba(120, 200, 220, 0.20)", "aurora-4": "rgba(180, 150, 220, 0.16)" },
-    evening: { "aurora-1": "rgba(255, 130, 150, 0.30)", "aurora-2": "rgba(220, 100, 200, 0.26)", "aurora-3": "rgba(180, 100, 200, 0.22)", "aurora-4": "rgba(255, 100, 100, 0.18)" },
-    night:   { "aurora-1": "rgba(110, 110, 220, 0.28)", "aurora-2": "rgba( 80,  80, 220, 0.24)", "aurora-3": "rgba(150, 100, 200, 0.20)", "aurora-4": "rgba(100, 150, 220, 0.18)" },
-    midnight:{ "aurora-1": "rgba( 50,  50, 140, 0.26)", "aurora-2": "rgba( 60,  30, 110, 0.22)", "aurora-3": "rgba( 80,  50, 140, 0.20)", "aurora-4": "rgba( 40,  60, 120, 0.18)" },
-  };
-  const getTimeOfDay = (h: number) => {
-    if (h >= 5 && h < 8) return "dawn";
-    if (h >= 8 && h < 11) return "morning";
-    if (h >= 11 && h < 14) return "noon";
-    if (h >= 14 && h < 17) return "afternoon";
-    if (h >= 17 && h < 20) return "evening";
-    if (h >= 20 && h < 23) return "night";
-    return "midnight";
-  };
-  const applyTimePalette = () => {
-    const isDark = document.documentElement.hasAttribute("data-theme");
-    const t = getTimeOfDay(new Date().getHours());
-    const palette = isDark ? timePalettesDark[t] : timePalettes[t];
-    Object.entries(palette).forEach(([k, v]) => {
-      document.documentElement.style.setProperty(`--${k}`, v);
-    });
-    document.documentElement.setAttribute("data-time", t);
-  };
-  applyTimePalette();
-  setInterval(applyTimePalette, 5 * 60 * 1000);
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) applyTimePalette(); });
-
-  // ===== Mouse-following glass highlight =====
-  const glassSelectors = ".glass-card, .blog-card, .view-all-card";
-  const glassEls = document.querySelectorAll<HTMLElement>(glassSelectors);
-  glassEls.forEach((el) => {
-    let raf = 0;
-    el.addEventListener("mousemove", (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const rect = el.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        el.style.setProperty("--mx", x + "%");
-        el.style.setProperty("--my", y + "%");
-      });
-    });
-  });
-
-  // ===== 3D tilt =====
-  const tiltSelectors = ".glass-card, .blog-card, .view-all-card";
-  const tiltEls = document.querySelectorAll<HTMLElement>(tiltSelectors);
-  const MAX_TILT = 7;
-  tiltEls.forEach((el) => {
-    let raf = 0;
-    let curRx = 0, curRy = 0;
-    let targetRx = 0, targetRy = 0;
-    const animate = () => {
-      raf = 0;
-      curRx += (targetRx - curRx) * 0.14;
-      curRy += (targetRy - curRy) * 0.14;
-      el.style.setProperty("--rx", curRx.toFixed(2) + "deg");
-      el.style.setProperty("--ry", curRy.toFixed(2) + "deg");
-      if (Math.abs(targetRx - curRx) > 0.05 || Math.abs(targetRy - curRy) > 0.05) {
-        raf = requestAnimationFrame(animate);
-      }
-    };
-    el.addEventListener("mousemove", (e) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      targetRx = -(dy / (rect.height / 2)) * MAX_TILT;
-      targetRy = (dx / (rect.width / 2)) * MAX_TILT;
-      if (!raf) raf = requestAnimationFrame(animate);
-    });
-    el.addEventListener("mouseleave", () => {
-      targetRx = 0;
-      targetRy = 0;
-      if (!raf) raf = requestAnimationFrame(animate);
-    });
-  });
-
-  // ===== Magnetic cursor on cards =====
-  const magneticSelectors = ".blog-card, .view-all-card";
-  const magneticEls = document.querySelectorAll<HTMLElement>(magneticSelectors);
-  const STRENGTH = 12;
-  magneticEls.forEach((el) => {
-    let raf = 0;
-    let targetX = 0, targetY = 0, curX = 0, curY = 0;
-    const animate = () => {
-      raf = 0;
-      curX += (targetX - curX) * 0.18;
-      curY += (targetY - curY) * 0.18;
-      el.style.setProperty("--mgx", curX.toFixed(2) + "px");
-      el.style.setProperty("--mgy", curY.toFixed(2) + "px");
-      if (Math.abs(targetX - curX) > 0.1 || Math.abs(targetY - curY) > 0.1) {
-        raf = requestAnimationFrame(animate);
-      } else {
-        el.style.setProperty("--mgx", "0px");
-        el.style.setProperty("--mgy", "0px");
-      }
-    };
-    el.addEventListener("mousemove", (e) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const maxDist = Math.max(rect.width, rect.height) / 2;
-      const pull = Math.min(1, dist / maxDist);
-      targetX = (dx / dist) * STRENGTH * pull;
-      targetY = (dy / dist) * STRENGTH * pull;
-      if (!raf) raf = requestAnimationFrame(animate);
-    });
-    el.addEventListener("mouseleave", () => {
-      targetX = 0;
-      targetY = 0;
-      if (!raf) raf = requestAnimationFrame(animate);
-    });
-  });
-
-  // ===== Scroll-driven reveal for blog content =====
-  const revealEls = document.querySelectorAll<HTMLElement>(
-    ".blog-post-content > h2, .blog-post-content > h3, .blog-post-content > p, .blog-post-content > ul, .blog-post-content > ol, .blog-post-content > pre, .blog-post-content > blockquote, .blog-post-content > img, .blog-post-content > table, .blog-post-content > hr"
-  );
-  if (revealEls.length && "IntersectionObserver" in window) {
-    revealEls.forEach((el) => el.classList.add("reveal"));
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("reveal--in");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-    revealEls.forEach((el) => io.observe(el));
-  }
-
-  // ===== View Transitions API for cross-page =====
-  if ("startViewTransition" in document) {
-    document.addEventListener("click", (e) => {
-      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
-      if (!a) return;
-      if (a.target === "_blank" || a.hasAttribute("download")) return;
-      if (a.origin !== location.origin) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const url = new URL(a.href);
-      if (url.pathname === location.pathname && url.search === location.search && url.hash === "") return;
-      e.preventDefault();
-      (document as any).startViewTransition(() => {
-        window.location.href = a.href;
-      });
-    });
-  }
-
-  // ===== Kinetic Hero =====
-  const hero = document.querySelector<HTMLElement>(".kinetic-hero[data-kinetic]");
-  if (hero && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const verse = hero.querySelector<HTMLElement>(".bible-verse");
-    if (verse) {
-      const text = verse.textContent ?? "";
-      const frag = document.createDocumentFragment();
-      Array.from(text).forEach((ch, i) => {
-        const span = document.createElement("span");
-        span.className = "char";
-        span.textContent = ch;
-        span.style.animationDelay = (40 + i * 28) + "ms";
-        if (ch.trim() === "") span.style.whiteSpace = "pre";
-        frag.appendChild(span);
-      });
-      verse.textContent = "";
-      verse.appendChild(frag);
-
-      verse.addEventListener("mouseover", (e) => {
-        const t = e.target as HTMLElement;
-        if (t.classList.contains("char")) t.setAttribute("data-cursor", "over");
-      });
-      verse.addEventListener("mouseout", (e) => {
-        const t = e.target as HTMLElement;
-        if (t.classList.contains("char")) t.removeAttribute("data-cursor");
-      });
-
-      // Scroll parallax on chars
-      const chars = verse.querySelectorAll<HTMLElement>(".char");
-      let raf = 0;
-      const onScroll = () => {
-        raf = 0;
-        const rect = hero.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const progress = Math.max(-0.6, Math.min(0.6, -rect.top / vh));
-        chars.forEach((c, i) => {
-          const center = (chars.length - 1) / 2;
-          const factor = (i - center) / center;
-          const ty = progress * 18 * factor;
-          c.style.translate = `0 ${ty.toFixed(2)}px`;
-        });
-      };
-      window.addEventListener("scroll", () => {
-        if (!raf) raf = requestAnimationFrame(onScroll);
-      }, { passive: true });
-      onScroll();
-    }
-  }
+  document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
+  document.getElementById("mobile-theme-toggle")?.addEventListener("click", toggleTheme);
 </script>

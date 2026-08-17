@@ -12,43 +12,44 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
 <BaseLayout title="故事" description="Shiorangerin 的 OC 故事集。">
-  <section class="animate-in">
-    <div class="glass-card">
-      <h1>故事</h1>
-      <p>
-        <span class="bible-verse" data-ref="马太福音 13:34">这都是耶稣用比喻对众人说的话；若不用比喻，就不对他们说什么。</span>
-      </p>
-      <div class="tags">
-        <a href={base + "rss.xml"} class="rss-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
-          </svg>
-          RSS
-        </a>
+  <SearchBar slot="composer" placeholder="搜索故事…" />
+
+  <article class="msg msg--assistant">
+    <div class="msg-avatar">
+      <img src={base + "avatar.jpg"} alt="Shiorangerin" />
+    </div>
+    <div class="msg-body">
+      <div class="bubble bubble--assistant">
+        <p>
+          <span class="bible-verse" data-ref="马太福音 13:34">这都是耶稣用比喻对众人说的话；若不用比喻，就不对他们说什么。</span>
+        </p>
+        <div class="tags" style="margin-top: 0.75rem;">
+          <a href={base + "rss.xml"} class="rss-link" aria-label="RSS 订阅">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z" />
+            </svg>
+            RSS
+          </a>
+        </div>
       </div>
     </div>
-  </section>
+  </article>
 
-  <section style="margin-top: 1.5rem;">
-    <SearchBar placeholder="搜索故事…" />
-    <div id="blog-list">
-      {
-          sorted.length === 0 ? (
-          <div class="glass-card animate-in">
-            <p style="text-align: center; color: var(--text-tertiary); margin: 0;">
-              暂无故事，稍后再来看看。
-            </p>
+  <div id="blog-list" class="thread-list">
+    {
+      sorted.length === 0 ? (
+        <div class="empty-state">
+          暂无故事，稍后再来看看。
+        </div>
+      ) : (
+        sorted.map((post) => (
+          <div class="thread-item">
+            <BlogCard post={post} collection="stories" />
           </div>
-        ) : (
-          sorted.map((post, i) => (
-            <div class={`animate-in stagger-${Math.min(i + 1, 4)}`}>
-              <BlogCard post={post} collection="stories" />
-            </div>
-          ))
-        )
-      }
-    </div>
-  </section>
+        ))
+      )
+    }
+  </div>
 </BaseLayout>
 
 <script>
