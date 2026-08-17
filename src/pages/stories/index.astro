@@ -68,5 +68,13 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
         c.style.display = results.has(c as HTMLElement) ? "" : "none";
       });
     });
+
+    // 支持从其他页面全局搜索跳转进来（?q=关键词）
+    const params = new URLSearchParams(window.location.search);
+    const qParam = params.get("q");
+    if (qParam) {
+      searchInput.value = qParam;
+      searchInput.dispatchEvent(new Event("input"));
+    }
   }
 </script>

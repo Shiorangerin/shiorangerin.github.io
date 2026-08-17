@@ -789,7 +789,11 @@ a.thread:focus-visible::after {
   border-radius: var(--radius-full);
   background: var(--accent);
   color: #ffffff;
-  cursor: default;
+  cursor: pointer;
+}
+
+.composer-send:not(:disabled):hover {
+  background: var(--accent-hover);
 }
 
 .composer-send:disabled {
