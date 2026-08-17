@@ -63,19 +63,6 @@ const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
 <BaseLayout title="项目" description="GitHub 开源项目">
-  <article class="msg msg--assistant">
-    <div class="msg-avatar">
-      <img src={base + "avatar.jpg"} alt="Shiorangerin" />
-    </div>
-    <div class="msg-body">
-      <div class="bubble bubble--assistant">
-        <p>
-          <span class="bible-verse" data-ref="歌罗西书 3:23">无论做什么，都要从心里做，像是给主做的，不是给人做的。</span>
-        </p>
-      </div>
-    </div>
-  </article>
-
   <div class="thread-list">
     {
       error ? (
