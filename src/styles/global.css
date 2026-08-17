@@ -60,6 +60,8 @@
   --bg-hover: rgba(0, 0, 0, 0.045);
   --bg-active: rgba(0, 0, 0, 0.08);
   --bg-composer: #ffffff;
+  --bg-suggestion: #f4f4f5;
+  --bg-suggestion-hover: #e9e9eb;
   --text-primary: #1a1a1a;
   --text-secondary: #5f5f5f;
   --text-tertiary: #8e8e93;
@@ -96,6 +98,8 @@
   --bg-hover: rgba(255, 255, 255, 0.06);
   --bg-active: rgba(255, 255, 255, 0.10);
   --bg-composer: #212121;
+  --bg-suggestion: #2f2f2f;
+  --bg-suggestion-hover: #3a3a3a;
   --text-primary: rgba(255, 255, 255, 0.92);
   --text-secondary: rgba(255, 255, 255, 0.64);
   --text-tertiary: rgba(255, 255, 255, 0.40);
@@ -531,6 +535,75 @@ textarea {
 .chat-action:hover {
   background: var(--accent-bg-hover);
   color: var(--accent-hover);
+}
+
+/* ---------- 首页空状态（ChatGPT 式） ---------- */
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 9vh 0 2.5rem;
+}
+
+.home-hero-title {
+  margin: 0 0 2rem;
+  font-size: 2.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 13px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-suggestion);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.suggestion:hover {
+  background: var(--bg-suggestion-hover);
+}
+
+.suggestion-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.suggestion-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+.recent-section {
+  margin-top: 2rem;
+}
+
+.recent-heading {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 /* ---------- 会话列表条目 ---------- */
@@ -1126,6 +1199,19 @@ a.thread:focus-visible::after {
 
   .bubble--assistant {
     font-size: 15px;
+  }
+
+  .home-hero {
+    padding: 6vh 0 2rem;
+  }
+
+  .home-hero-title {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .suggestion-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .mobile-nav {
