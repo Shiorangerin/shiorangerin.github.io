@@ -129,6 +129,10 @@ if (articleDate && ogType === "article") {
           else root.removeAttribute("data-theme");
         };
 
+        if (localStorage.getItem("style") === "claude") {
+          root.setAttribute("data-style", "claude");
+        }
+
         if (stored === "dark" || stored === "light") {
           apply(stored === "dark");
         } else {
@@ -235,6 +239,11 @@ if (articleDate && ogType === "article") {
           <span>{item.label}</span>
         </a>
       ))}
+      <button class="mobile-style-toggle" id="mobile-style-toggle" aria-label="切换 Claude 风格" title="切换 Claude 风格">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M12 3v18"/><path d="M4.2 7.5l15.6 9"/><path d="M19.8 7.5l-15.6 9"/>
+        </svg>
+      </button>
       <button class="mobile-theme-toggle" id="mobile-theme-toggle" aria-label="切换明暗模式">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -260,6 +269,24 @@ if (articleDate && ogType === "article") {
   };
   document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
   document.getElementById("mobile-theme-toggle")?.addEventListener("click", toggleTheme);
+
+  const toggleStyle = () => {
+    const root = document.documentElement;
+    const claude = root.getAttribute("data-style") !== "claude";
+    if (claude) root.setAttribute("data-style", "claude");
+    else root.removeAttribute("data-style");
+    localStorage.setItem("style", claude ? "claude" : "default");
+    syncStylePressed();
+  };
+  const syncStylePressed = () => {
+    const pressed = String(document.documentElement.getAttribute("data-style") === "claude");
+    for (const id of ["style-toggle", "mobile-style-toggle"]) {
+      document.getElementById(id)?.setAttribute("aria-pressed", pressed);
+    }
+  };
+  document.getElementById("style-toggle")?.addEventListener("click", toggleStyle);
+  document.getElementById("mobile-style-toggle")?.addEventListener("click", toggleStyle);
+  syncStylePressed();
 </script>
 
 <script>
